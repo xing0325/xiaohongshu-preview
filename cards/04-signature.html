@@ -48,16 +48,35 @@
     color:var(--wax);font-size:152px;margin:0 .08em;vertical-align:-10px;
   }
   .big .ans{color:var(--wax)}
-  .deck{
-    position:absolute;left:96px;top:470px;
-    font-family:"Cormorant Garamond",serif;font-style:italic;
-    color:var(--ink-soft);font-size:30px;letter-spacing:.18em;
+  /* "信件读完之后" 视觉过渡 */
+  .letter-end-cue{
+    position:absolute;left:90px;right:90px;top:470px;
+    text-align:center;
   }
-  .deck::before{content:"——";color:var(--gold);margin-right:14px}
+  .le-dots{
+    font-family:"Ma Shan Zheng","KaiTi",serif;
+    font-size:30px;color:var(--ink-soft);letter-spacing:.18em;
+  }
+  .le-line{
+    height:1px;background:var(--line);margin:18px 140px;
+  }
+  .le-label{
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:20px;letter-spacing:.32em;
+    text-transform:uppercase;
+  }
+  .le-arrow{
+    font-family:"Cormorant Garamond",serif;
+    color:var(--wax);font-size:32px;line-height:1;margin:6px 0 2px;
+  }
+  .le-sub{
+    font-family:"Noto Serif SC",serif;font-weight:500;
+    color:var(--ink-soft);font-size:20px;letter-spacing:.08em;margin-top:4px;
+  }
 
   /* 签名画布 */
   .canvas{
-    position:absolute;left:90px;right:90px;top:580px;
+    position:absolute;left:90px;right:90px;top:660px;
     background:var(--paper);
     border:1px solid rgba(90,74,48,0.35);
     box-shadow:
@@ -196,14 +215,22 @@
     签下你的名字<br>
     <span class="eq">=</span><span class="ans">答应</span>一起吃饭
   </h1>
-  <div class="deck">a yes that lives on paper, not in air</div>
+
+  <!-- 让 reader 知道：签名是信的最后那一步 -->
+  <div class="letter-end-cue">
+    <div class="le-dots">⋯ 我会一直在 ⋯</div>
+    <div class="le-line"></div>
+    <div class="le-label">信件读到这里结束</div>
+    <div class="le-arrow">↓</div>
+    <div class="le-sub">下面这块画板，就是收件人的回应</div>
+  </div>
 
   <div class="canvas">
     <div class="head">
-      <h3>· The Reply Card ·</h3>
+      <h3>· 信件最末尾 · 签名画板 ·</h3>
       <span class="tag">PRIVATE · 仅你我可见</span>
     </div>
-    <div class="label">如果你愿意，把名字写在下面那条横线上。<b>就这一件事。</b></div>
+    <div class="label">如果你愿意来今晚的饭，把名字写在下面那条横线上。<b>就这一件事。</b></div>
 
     <div class="sig-area">
       <div class="base"></div>

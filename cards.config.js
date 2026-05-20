@@ -10,16 +10,15 @@ window.CARDS_CONFIG = {
   // Card files in the order they should appear on 小红书 (left → right swipe).
   // Each file should be a 1242 × 1656 standalone HTML (relative to this folder).
   cards: [
-    'cards/01-cover.html',
-    'cards/02-origin.html',
-    'cards/03-letter.html',
-    'cards/04-signature.html',
-    'cards/05-museum.html',
-    'cards/06-mood.html',
-    'cards/07-disappointment.html',
-    'cards/08-channel.html',
-    'cards/10-howto.html',
-    'cards/09-cta.html',
+    'cards/09-cta.html',          // 1. CTA cover (hook: 今天 520 你也可以)
+    'cards/02-origin.html',       // 2. 缘起 (冷战的第 81 天)
+    'cards/03-letter.html',       // 3. 一封信
+    'cards/04-signature.html',    // 4. 签名 = 答应
+    'cards/05-museum.html',       // 5. 档案馆 6 间房
+    'cards/06-mood.html',         // 6. 今日心情
+    'cards/07-disappointment.html', // 7. 失望档案
+    'cards/10-howto.html',        // 8. 三步上手
+    'cards/01-cover.html',        // 9. 故事落点 (她 8:26 / 5 分 31 秒)
   ],
 
   // The post itself (caption / hashtags / author).
