@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>02 · 缘起</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ede2c8; --paper:#f7efd9;
+    --ink:#2a2010; --ink-soft:#5a4a30; --ink-faint:#8a7656;
+    --wax:#8b2a1e; --gold:#b08d57; --accent:#c64a3a;
+    --line:rgba(176,141,87,0.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#cdbfa3}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:"Noto Serif SC",serif;color:var(--ink);
+    background:radial-gradient(120% 90% at 30% 0%, #f1e6cb 0%, #e6d8b5 60%, #d6c59b 100%);
+    position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(80,55,20,0.06) 1px, transparent 1.4px),
+      radial-gradient(rgba(80,55,20,0.04) 1px, transparent 1.2px);
+    background-size:7px 7px,13px 13px;
+    background-position:0 0,3px 5px;
+    mix-blend-mode:multiply;opacity:.6;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.26em;text-transform:uppercase;
+  }
+  .topbar .num{font-style:normal;color:var(--wax);letter-spacing:.1em;font-weight:500}
+
+  /* 主标题 - 毛笔字 */
+  .big{
+    position:absolute;left:90px;top:200px;
+    font-family:"Ma Shan Zheng",serif;
+    font-size:200px;line-height:.95;
+    color:var(--ink);
+    letter-spacing:.02em;
+    text-shadow:0 2px 0 rgba(255,250,230,0.5);
+  }
+  .big .accent{color:var(--wax)}
+  .big .day{
+    display:block;font-family:"Cormorant Garamond",serif;
+    font-style:italic;font-size:240px;color:var(--wax);
+    line-height:1;margin-top:-10px;letter-spacing:-.04em;
+    font-weight:500;
+  }
+  .big .day sup{font-size:60px;vertical-align:130px;font-style:normal;letter-spacing:.3em;color:var(--ink-soft);font-family:"Cormorant Garamond",serif}
+
+  .deck{
+    position:absolute;left:96px;top:660px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-soft);font-size:30px;letter-spacing:.18em;
+  }
+  .deck::before{content:"——";color:var(--gold);margin-right:18px;letter-spacing:0}
+
+  /* 日历 */
+  .calendar{
+    position:absolute;right:90px;top:200px;width:430px;
+    padding:32px 30px 28px;
+    background:var(--paper);
+    border:1px solid rgba(90,74,48,0.35);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 30px 60px -28px rgba(60,40,15,0.45),
+      0 12px 22px -12px rgba(60,40,15,0.28);
+    transform:rotate(2.4deg);
+  }
+  .calendar::before{
+    content:"";position:absolute;left:-10px;top:24px;bottom:24px;width:1px;
+    background:repeating-linear-gradient(180deg, rgba(139,42,30,0.5) 0 6px, transparent 6px 12px);
+  }
+  .calendar h3{
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+    font-size:28px;color:var(--wax);letter-spacing:.2em;text-align:center;
+    border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:16px;
+    text-transform:uppercase;
+  }
+  .calendar h3 b{display:block;font-family:"Noto Serif SC",serif;font-weight:600;font-style:normal;
+    font-size:38px;color:var(--ink);letter-spacing:.04em;margin-top:4px}
+  .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:8px 4px;
+    font-family:"Cormorant Garamond",serif;font-size:24px;color:var(--ink-soft);text-align:center}
+  .cal-grid .head{font-size:18px;color:var(--ink-faint);letter-spacing:.15em;padding-bottom:6px;border-bottom:1px solid var(--line);margin-bottom:6px}
+  .cal-grid .day{padding:8px 0;position:relative}
+  .cal-grid .mute{color:var(--ink-faint);opacity:.5}
+  .cal-grid .ring{
+    color:var(--wax);font-weight:500;
+  }
+  .cal-grid .ring::before{
+    content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:38px;height:38px;border:1.5px solid var(--wax);border-radius:50%;
+    opacity:.65;
+  }
+  .cal-grid .today{color:#fff;font-weight:600}
+  .cal-grid .today::before{
+    content:"";position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:42px;height:42px;background:var(--wax);border-radius:50%;
+    box-shadow:0 4px 10px -2px rgba(139,42,30,0.6);
+  }
+  .cal-grid .day span{position:relative;z-index:2}
+  .cal-note{
+    margin-top:18px;text-align:center;
+    font-family:"Noto Serif SC",serif;font-size:18px;color:var(--ink-faint);
+    letter-spacing:.1em;
+  }
+  .cal-note b{color:var(--wax);font-weight:500}
+
+  /* 时间线 */
+  .timeline{
+    position:absolute;left:90px;right:90px;top:880px;height:280px;
+  }
+  .tl-rail{
+    position:absolute;left:0;right:0;top:130px;height:1px;
+    background:linear-gradient(90deg,transparent 0%, var(--gold) 8%, var(--gold) 92%, transparent 100%);
+  }
+  .tl-rail::after{
+    content:"";position:absolute;right:0;top:-4px;
+    width:0;height:0;border-left:14px solid var(--wax);border-top:5px solid transparent;border-bottom:5px solid transparent;
+  }
+  .node{position:absolute;top:130px;transform:translate(-50%,-50%);text-align:center;width:160px}
+  .node .dot{
+    width:14px;height:14px;border-radius:50%;background:var(--paper);
+    border:2px solid var(--gold);margin:0 auto;position:relative;z-index:2;
+  }
+  .node.active .dot{background:var(--wax);border-color:var(--wax);box-shadow:0 0 0 6px rgba(139,42,30,0.12)}
+  .node .lab-top{
+    position:absolute;left:50%;transform:translateX(-50%);top:-66px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.18em;white-space:nowrap;
+  }
+  .node .lab-bot{
+    position:absolute;left:50%;transform:translateX(-50%);top:30px;
+    font-family:"Noto Serif SC",serif;font-size:22px;color:var(--ink-soft);
+    letter-spacing:.06em;white-space:nowrap;
+  }
+  .node.active .lab-top{color:var(--wax);font-weight:500}
+  .node.active .lab-bot{color:var(--ink);font-weight:600}
+
+  /* 正文引文 */
+  .quote{
+    position:absolute;left:90px;right:90px;bottom:200px;
+    background:linear-gradient(180deg, rgba(247,239,217,0.85), rgba(247,239,217,0.6));
+    padding:50px 60px 46px;
+    border-left:3px solid var(--wax);
+    box-shadow:0 18px 30px -20px rgba(60,40,15,0.4);
+  }
+  .quote::before{
+    content:"「";position:absolute;left:18px;top:0;
+    font-family:"Ma Shan Zheng",serif;font-size:90px;color:var(--wax);opacity:.35;line-height:1;
+  }
+  .quote p{
+    font-size:34px;line-height:1.7;color:var(--ink);
+    letter-spacing:.04em;font-weight:400;
+  }
+  .quote p + p{margin-top:6px}
+  .quote .em{color:var(--wax);font-weight:600}
+  .quote .small{font-size:26px;color:var(--ink-soft);font-style:italic;font-family:"Cormorant Garamond",serif;letter-spacing:.12em;margin-top:18px;display:block}
+
+  .corner{
+    position:absolute;right:80px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:20px;letter-spacing:.28em;
+    text-transform:uppercase;text-align:right;line-height:1.5;
+  }
+  .pageno{
+    position:absolute;left:90px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.28em;
+  }
+  .pageno b{color:var(--wax);font-weight:500;font-style:normal}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>缘 起 · ORIGIN</span>
+    <span class="num">02 / 09</span>
+  </div>
+
+  <div class="big">
+    冷战的<span class="accent">第</span>
+    <span class="day">67<sup>天</sup></span>
+  </div>
+  <div class="deck">a winter that we made ourselves</div>
+
+  <div class="calendar" aria-hidden="true">
+    <h3>May · 五月<b>MMXXVI</b></h3>
+    <div class="cal-grid">
+      <div class="head">S</div><div class="head">M</div><div class="head">T</div><div class="head">W</div><div class="head">T</div><div class="head">F</div><div class="head">S</div>
+
+      <div class="day mute"><span>26</span></div>
+      <div class="day mute"><span>27</span></div>
+      <div class="day mute"><span>28</span></div>
+      <div class="day mute"><span>29</span></div>
+      <div class="day mute"><span>30</span></div>
+      <div class="day"><span>1</span></div>
+      <div class="day"><span>2</span></div>
+
+      <div class="day"><span>3</span></div>
+      <div class="day"><span>4</span></div>
+      <div class="day"><span>5</span></div>
+      <div class="day"><span>6</span></div>
+      <div class="day"><span>7</span></div>
+      <div class="day"><span>8</span></div>
+      <div class="day"><span>9</span></div>
+
+      <div class="day"><span>10</span></div>
+      <div class="day"><span>11</span></div>
+      <div class="day"><span>12</span></div>
+      <div class="day"><span>13</span></div>
+      <div class="day"><span>14</span></div>
+      <div class="day"><span>15</span></div>
+      <div class="day"><span>16</span></div>
+
+      <div class="day"><span>17</span></div>
+      <div class="day ring"><span>18</span></div>
+      <div class="day ring"><span>19</span></div>
+      <div class="day today"><span>20</span></div>
+      <div class="day"><span>21</span></div>
+      <div class="day"><span>22</span></div>
+      <div class="day"><span>23</span></div>
+
+      <div class="day"><span>24</span></div>
+      <div class="day"><span>25</span></div>
+      <div class="day"><span>26</span></div>
+      <div class="day"><span>27</span></div>
+      <div class="day"><span>28</span></div>
+      <div class="day"><span>29</span></div>
+      <div class="day"><span>30</span></div>
+    </div>
+    <div class="cal-note">18–19 写代码 · <b>20 开信</b></div>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-rail"></div>
+    <div class="node" style="left:8%"><div class="lab-top">DAY 1</div><div class="dot"></div><div class="lab-bot">爆发那晚</div></div>
+    <div class="node" style="left:30%"><div class="lab-top">DAY 20</div><div class="dot"></div><div class="lab-bot">第一次冷读</div></div>
+    <div class="node" style="left:52%"><div class="lab-top">DAY 45</div><div class="dot"></div><div class="lab-bot">她递的台阶</div></div>
+    <div class="node" style="left:74%"><div class="lab-top">DAY 65</div><div class="dot"></div><div class="lab-bot">我开始写</div></div>
+    <div class="node active" style="left:94%"><div class="lab-top">DAY 67</div><div class="dot"></div><div class="lab-bot">今天 · 520</div></div>
+  </div>
+
+  <div class="quote">
+    <p>她坦诚、热烈、平和地把自己<span class="em">一遍遍打开</span>给我。</p>
+    <p>我没接住。</p>
+    <p>离 520 还有 2 天的晚上，我开始写代码。</p>
+    <span class="small">— before midnight, may 18</span>
+  </div>
+
+  <div class="pageno">No. <b>02</b> · ORIGIN</div>
+  <div class="corner">THE MUSEUM OF US<br>A 520 Project</div>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>10 · How to use</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ede2c8; --paper:#f7efd9;
+    --ink:#2a2010; --ink-soft:#5a4a30; --ink-faint:#8a7656;
+    --wax:#8b2a1e; --gold:#b08d57; --accent:#c64a3a;
+    --line:rgba(176,141,87,0.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:"Noto Serif SC",serif;color:var(--ink);
+    background:radial-gradient(120% 90% at 50% 0%, #f1e6cb 0%, #e6d8b5 60%, #d6c59b 100%);
+    position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(80,55,20,0.06) 1px, transparent 1.4px),
+      radial-gradient(rgba(80,55,20,0.04) 1px, transparent 1.2px);
+    background-size:7px 7px,13px 13px;background-position:0 0,3px 5px;
+    mix-blend-mode:multiply;opacity:.6;
+  }
+  body::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(50% 40% at 50% 60%, transparent 0%, rgba(60,40,15,0.16) 100%);
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.26em;text-transform:uppercase;
+  }
+  .topbar .num{font-style:normal;color:var(--wax);letter-spacing:.1em;font-weight:500}
+
+  .head{
+    position:absolute;left:0;right:0;top:160px;text-align:center;
+  }
+  .head .eyebrow{
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.36em;text-transform:uppercase;
+    margin-bottom:18px;
+  }
+  .head h1{
+    font-family:"Ma Shan Zheng","KaiTi",serif;
+    font-size:90px;color:var(--ink);letter-spacing:.06em;line-height:1.1;
+  }
+  .head h1 b{color:var(--wax);font-weight:inherit}
+  .head .sub{
+    margin-top:18px;
+    font-family:"Noto Serif SC",serif;font-weight:400;
+    color:var(--ink-soft);font-size:26px;letter-spacing:.12em;
+  }
+
+  /* 三步 */
+  .steps{
+    position:absolute;left:90px;right:90px;top:430px;
+    display:flex;flex-direction:column;gap:36px;
+  }
+  .step{
+    background:var(--paper);
+    background-image:repeating-linear-gradient(0deg,transparent 0,transparent 30px,rgba(176,141,87,0.07) 30px,rgba(176,141,87,0.07) 31px);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:28px 32px 28px 36px;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:36px;
+    align-items:center;
+    min-height:200px;
+    box-shadow:0 14px 36px -16px rgba(60,35,10,0.22);
+  }
+  .step .num{
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    font-size:84px;color:var(--wax);line-height:1;
+    letter-spacing:-0.02em;font-weight:500;
+  }
+  .step .body .lbl{
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:18px;letter-spacing:.32em;text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .step .body h2{
+    font-family:"Ma Shan Zheng","KaiTi",serif;
+    font-size:42px;color:var(--ink);letter-spacing:.06em;line-height:1.15;
+    margin-bottom:10px;font-weight:400;
+  }
+  .step .body p{
+    font-family:"Noto Serif SC",serif;
+    color:var(--ink-soft);font-size:22px;letter-spacing:.04em;line-height:1.55;
+  }
+  .step .body p code{
+    background:rgba(176,141,87,0.18);color:var(--ink-soft);
+    padding:2px 9px;border-radius:3px;
+    font-family:ui-monospace,"SF Mono",Consolas,monospace;
+    font-size:19px;letter-spacing:.02em;
+  }
+
+  /* 每步右边的小图 */
+  .visual{
+    width:200px;height:140px;
+    position:relative;
+  }
+
+  /* Step 1 visual: 一个迷你信封 */
+  .vis-env{
+    width:170px;height:110px;margin:15px auto 0;
+    background:linear-gradient(135deg,#ead9af,#d6bc85);
+    border:1px solid rgba(60,35,10,0.25);
+    border-radius:3px;
+    position:relative;
+    box-shadow:0 8px 18px -10px rgba(60,35,10,0.4);
+  }
+  .vis-env::before{
+    content:"";position:absolute;top:0;left:0;width:100%;height:50%;
+    background:linear-gradient(180deg,#ceb178,#b8995f);
+    clip-path:polygon(0 0,100% 0,50% 100%);
+  }
+  .vis-env::after{
+    content:"";position:absolute;top:38%;left:50%;width:32px;height:32px;
+    transform:translate(-50%,-50%);
+    background:radial-gradient(circle at 35% 30%,#c64a3a,var(--wax) 60%,#5a1a12 100%);
+    border-radius:50%;
+    box-shadow:inset -2px -2px 4px rgba(0,0,0,0.3),0 3px 6px rgba(0,0,0,0.2);
+    z-index:2;
+  }
+
+  /* Step 2 visual: 编辑器界面 */
+  .vis-edit{
+    width:180px;height:120px;margin:10px auto 0;
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:12px;
+    font-family:"Ma Shan Zheng","KaiTi",serif;
+    color:var(--ink);font-size:13px;letter-spacing:1px;
+    box-shadow:0 6px 16px -8px rgba(60,35,10,0.3);
+  }
+  .vis-edit .vh{font-size:14px;color:var(--ink);margin-bottom:8px}
+  .vis-edit .vl{
+    height:1px;background:var(--line);margin-bottom:9px;
+  }
+  .vis-edit .vp{
+    font-family:"Noto Serif SC",serif;font-size:11px;line-height:1.6;color:var(--ink-soft);
+    letter-spacing:0;
+    overflow:hidden;
+    display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;
+  }
+
+  /* Step 3 visual: link 框 + 复制按钮 */
+  .vis-share{
+    width:180px;margin:18px auto 0;
+  }
+  .vis-share .link{
+    background:var(--ink);color:var(--paper);
+    font-family:ui-monospace,"SF Mono",Consolas,monospace;
+    font-size:11px;letter-spacing:.02em;
+    padding:9px 12px;border-radius:3px;
+    text-align:center;
+    box-shadow:0 6px 14px -8px rgba(60,35,10,0.4);
+  }
+  .vis-share .arrow{
+    text-align:center;font-size:24px;color:var(--wax);
+    margin:6px 0;line-height:1;
+  }
+  .vis-share .heart{
+    text-align:center;font-family:"Ma Shan Zheng","KaiTi",serif;
+    color:var(--wax);font-size:24px;letter-spacing:6px;
+  }
+
+  /* 底部 */
+  .bottom{
+    position:absolute;left:0;right:0;bottom:90px;text-align:center;
+  }
+  .bottom .url{
+    display:inline-block;
+    padding:12px 28px;
+    background:var(--ink);color:var(--paper);
+    font-family:ui-monospace,"SF Mono",Consolas,monospace;
+    font-size:24px;letter-spacing:.04em;
+    border-radius:5px;
+    box-shadow:0 8px 22px -10px rgba(60,35,10,0.45);
+    margin-bottom:18px;
+  }
+  .bottom .credit{
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:20px;letter-spacing:.28em;
+  }
+  .bottom .credit b{color:var(--wax);font-style:normal;font-weight:500}
+
+  .corner{
+    position:absolute;left:90px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:18px;letter-spacing:.28em;
+  }
+  .pageno{
+    position:absolute;right:90px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.28em;
+  }
+  .pageno b{color:var(--wax);font-weight:500;font-style:normal}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>How To · 三步上手</span>
+    <span class="num">10 / 10</span>
+  </div>
+
+  <div class="head">
+    <div class="eyebrow">— try it in 3 steps —</div>
+    <h1>三步，给你们也<b>建一个</b></h1>
+    <div class="sub">不需要注册 · 不需要下载 · 浏览器打开就用</div>
+  </div>
+
+  <div class="steps">
+
+    <div class="step">
+      <div class="num">01</div>
+      <div class="body">
+        <div class="lbl">open</div>
+        <h2>打开网址</h2>
+        <p>浏览器输入 <code>museum-of-us-520.netlify.app</code>，点首页大按钮「<b style="color:var(--wax)">建一个属于你们的 →</b>」</p>
+      </div>
+      <div class="visual"><div class="vis-env"></div></div>
+    </div>
+
+    <div class="step">
+      <div class="num">02</div>
+      <div class="body">
+        <div class="lbl">write</div>
+        <h2>写一封信</h2>
+        <p>编辑器自动弹出。写下你想说的话 · 选一首歌（网易云歌曲 ID） · 自动保存。</p>
+      </div>
+      <div class="visual">
+        <div class="vis-edit">
+          <div class="vh">致 你：</div>
+          <div class="vl"></div>
+          <div class="vp">如果你点开了这封信，说明你愿意听我说。这段时间是我让你失望了……</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="num">03</div>
+      <div class="body">
+        <div class="lbl">send</div>
+        <h2>把链接发给 ta</h2>
+        <p>点「复制对方链接」 · 粘到微信 / 短信 · ta 点开就能看你写的整封信、签名画板、和后面的档案馆。</p>
+      </div>
+      <div class="visual">
+        <div class="vis-share">
+          <div class="link">…/m.html?room=kqf9xz</div>
+          <div class="arrow">↓</div>
+          <div class="heart">致 · 你</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bottom">
+    <div class="url">museum-of-us-520.netlify.app</div>
+    <div class="credit">© 520 · MMXXVI <b>·</b> made with restraint.</div>
+  </div>
+
+  <div class="corner">THE MUSEUM OF US</div>
+  <div class="pageno">PAGE <b>10</b> / 10</div>
+</body>
+</html>

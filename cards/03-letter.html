@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>03 · 一封信</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ede2c8; --paper:#f7efd9;
+    --ink:#2a2010; --ink-soft:#5a4a30; --ink-faint:#8a7656;
+    --wax:#8b2a1e; --gold:#b08d57; --accent:#c64a3a;
+    --line:rgba(176,141,87,0.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:"Noto Serif SC",serif;color:var(--ink);
+    background:radial-gradient(120% 90% at 70% 0%, #f1e6cb 0%, #e6d8b5 60%, #d6c59b 100%);
+    position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(80,55,20,0.06) 1px, transparent 1.4px),
+      radial-gradient(rgba(80,55,20,0.04) 1px, transparent 1.2px);
+    background-size:7px 7px,13px 13px;background-position:0 0,3px 5px;
+    mix-blend-mode:multiply;opacity:.6;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.26em;text-transform:uppercase;
+  }
+  .topbar .num{font-style:normal;color:var(--wax);letter-spacing:.1em;font-weight:500}
+
+  .big{
+    position:absolute;left:90px;top:160px;right:90px;
+    font-family:"Ma Shan Zheng",serif;
+    font-size:120px;line-height:1.1;color:var(--ink);
+    letter-spacing:.02em;
+  }
+  .big .em{color:var(--wax)}
+  .big .small{
+    display:block;font-family:"Cormorant Garamond",serif;font-style:italic;
+    font-size:34px;color:var(--ink-faint);letter-spacing:.18em;margin-top:14px;
+  }
+
+  /* 信纸 */
+  .letter{
+    position:absolute;left:130px;right:130px;top:480px;bottom:340px;
+    background:var(--paper);
+    border:1px solid rgba(90,74,48,0.32);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.7) inset,
+      0 40px 70px -28px rgba(60,40,15,0.5),
+      0 14px 26px -14px rgba(60,40,15,0.3);
+    padding:64px 80px 60px;
+    transform:rotate(-1.2deg);
+  }
+  .letter::before{
+    /* 信纸横线 */
+    content:"";position:absolute;left:80px;right:80px;top:200px;bottom:120px;
+    background:repeating-linear-gradient(180deg,
+      transparent 0 51px,
+      rgba(139,42,30,0.18) 51px 52px);
+    pointer-events:none;
+  }
+  .letter::after{
+    /* 红色信纸左边距 */
+    content:"";position:absolute;left:130px;top:40px;bottom:40px;width:1px;
+    background:repeating-linear-gradient(180deg, rgba(139,42,30,0.55) 0 4px, transparent 4px 9px);
+  }
+
+  .lt-title{
+    font-family:"Ma Shan Zheng",serif;
+    font-size:92px;color:var(--ink);letter-spacing:.12em;
+    text-align:left;
+    padding-left:30px;
+    line-height:1;
+  }
+  .lt-title em{color:var(--wax);font-style:normal;margin:0 .12em;font-size:104px;vertical-align:-6px}
+  .lt-sub{
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:24px;letter-spacing:.22em;
+    margin-top:18px;padding-left:32px;
+  }
+  .lt-rule{
+    margin:36px 0 30px;padding-left:30px;
+    display:flex;align-items:center;gap:16px;
+    color:var(--gold);
+  }
+  .lt-rule i{flex:1;height:1px;background:linear-gradient(90deg,var(--gold),transparent)}
+  .lt-rule b{font-family:"Cormorant Garamond",serif;font-style:italic;letter-spacing:.3em;font-size:18px;color:var(--ink-faint);font-weight:500}
+
+  .lt-body{
+    position:relative;z-index:2;padding:0 30px;
+    font-family:"Ma Shan Zheng",serif;
+    color:var(--ink);font-size:42px;line-height:52px;
+    letter-spacing:.04em;
+  }
+  .lt-body p{margin-bottom:0}
+  .lt-body .a{color:var(--ink)}
+  .lt-body .b{color:var(--ink-soft);font-size:36px;line-height:52px;font-family:"Noto Serif SC",serif;font-weight:500;display:block;margin-top:6px}
+  .lt-body .em{color:var(--wax)}
+
+  /* 信封盖角 */
+  .corner-fold{
+    position:absolute;right:0;top:0;width:80px;height:80px;
+    background:linear-gradient(225deg, rgba(60,40,15,0.18) 0%, transparent 50%);
+  }
+  .corner-fold::after{
+    content:"";position:absolute;right:0;top:0;width:80px;height:80px;
+    background:linear-gradient(225deg, var(--bg) 50%, transparent 50%);
+    box-shadow:-2px 2px 4px rgba(60,40,15,0.2);
+  }
+
+  /* 注释卡片 */
+  .rules{
+    position:absolute;left:140px;right:140px;bottom:170px;
+    display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  }
+  .rule{
+    padding:22px 26px;
+    background:rgba(247,239,217,0.7);
+    border:1px solid var(--line);
+    box-shadow:0 1px 0 rgba(255,255,255,0.5) inset;
+    position:relative;
+  }
+  .rule .no{
+    position:absolute;top:-14px;left:20px;
+    background:var(--wax);color:#f3e9c8;
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+    font-size:20px;letter-spacing:.18em;padding:4px 14px;
+    text-transform:uppercase;
+  }
+  .rule h4{
+    font-family:"Noto Serif SC",serif;font-weight:600;
+    font-size:28px;color:var(--ink);margin-bottom:6px;letter-spacing:.04em;
+  }
+  .rule h4 s{color:var(--ink-faint);text-decoration-color:var(--wax);text-decoration-thickness:1.5px;font-weight:500}
+  .rule p{
+    font-family:"Noto Serif SC",serif;font-size:20px;line-height:1.6;
+    color:var(--ink-soft);letter-spacing:.02em;
+  }
+
+  .corner{
+    position:absolute;right:80px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:20px;letter-spacing:.28em;
+    text-transform:uppercase;text-align:right;line-height:1.5;
+  }
+  .pageno{
+    position:absolute;left:90px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.28em;
+  }
+  .pageno b{color:var(--wax);font-weight:500;font-style:normal}
+
+  /* 邮票装饰 */
+  .stamp{
+    position:absolute;right:100px;top:430px;width:120px;height:150px;
+    background:
+      radial-gradient(circle at 50% 35%, #c0533f 0%, #8b2a1e 70%);
+    border:6px solid var(--paper);
+    box-shadow:0 0 0 1px rgba(60,40,15,0.4),0 8px 18px -6px rgba(60,15,8,0.4);
+    transform:rotate(8deg);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-family:"Ma Shan Zheng",serif;color:#f3e0c8;
+  }
+  .stamp .v{font-size:48px;line-height:1}
+  .stamp .l{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:14px;letter-spacing:.22em;margin-top:6px;opacity:.8}
+  .stamp::before{
+    /* 邮票齿孔 */
+    content:"";position:absolute;inset:-6px;
+    background:
+      radial-gradient(circle at 6px 6px, var(--bg) 4px, transparent 4.5px) 0 0/14px 14px;
+    pointer-events:none;
+    mix-blend-mode:normal;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>第一步 · THE LETTER</span>
+    <span class="num">03 / 09</span>
+  </div>
+
+  <h1 class="big">
+    我做的第一件事<br>
+    是写<span class="em">一</span>封<span class="em">信</span>
+    <span class="small">— and i wrote it three times before it got real</span>
+  </h1>
+
+  <div class="letter">
+    <div class="lt-title">致 · <em>冯</em>小<em>扣</em></div>
+    <div class="lt-sub">A letter, before anything else</div>
+    <div class="lt-rule"><i></i><b>0 5 · 1 8 · 2 6 周一</b><i></i></div>
+    <div class="lt-body">
+      <p>那天你穿米白色，<span class="em">站在便利店门口等我</span>，</p>
+      <p>我盯着手机回了一条工作消息。</p>
+      <p>抬头时你已经走到红绿灯那边了。</p>
+    </div>
+    <div class="corner-fold"></div>
+  </div>
+
+  <div class="stamp">
+    <div class="v">扣</div>
+    <div class="l">DEAREST · 520</div>
+  </div>
+
+  <div class="rules">
+    <div class="rule">
+      <div class="no">RULE I</div>
+      <h4>不用<s>对不起</s>起头</h4>
+      <p>用一个具体的画面起头。<br>她要的是被看见，不是道歉。</p>
+    </div>
+    <div class="rule">
+      <div class="no">RULE II</div>
+      <h4>不写<s>我会改</s></h4>
+      <p>承诺太轻。写已经做了的事，<br>和具体下一步。</p>
+    </div>
+    <div class="rule">
+      <div class="no">RULE III</div>
+      <h4>不解释为何忽视她</h4>
+      <p>解释是给自己听的。<br>这封信是给她的。</p>
+    </div>
+  </div>
+
+  <div class="pageno">No. <b>03</b> · LETTER</div>
+  <div class="corner">THE MUSEUM OF US<br>A 520 Project</div>
+</body>
+</html>

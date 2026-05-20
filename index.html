@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>小红书图文预览工作台</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="cards.config.js"></script>
+<style>
+  :root {
+    --bg: #f5f5f5;
+    --panel: #ffffff;
+    --ink: #1a1a1a;
+    --ink-soft: #6b6b6b;
+    --ink-faint: #999;
+    --line: #e8e8e8;
+    --xhs-red: #ff2442;
+    --tag-bg: #f0f0f0;
+    --tag-ink: #5a8eda;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { background: var(--bg); color: var(--ink); font-family: 'Inter', -apple-system, system-ui, 'PingFang SC', 'Hiragino Sans GB', sans-serif; }
+  body { min-height: 100vh; display: flex; flex-direction: column; }
+
+  /* ===== Toolbar ===== */
+  .toolbar {
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .brand {
+    font-weight: 700;
+    font-size: 17px;
+    letter-spacing: 0.5px;
+    color: var(--ink);
+  }
+  .brand .accent { color: var(--xhs-red); }
+  .toolbar-spacer { flex: 1; }
+  .toggle {
+    display: inline-flex;
+    background: var(--bg);
+    border-radius: 100px;
+    padding: 4px;
+    gap: 4px;
+  }
+  .toggle button {
+    background: transparent;
+    border: none;
+    padding: 7px 18px;
+    border-radius: 100px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+  .toggle button.active {
+    background: var(--ink);
+    color: white;
+  }
+  .toolbar-btn {
+    background: var(--ink);
+    color: white;
+    border: none;
+    padding: 9px 18px;
+    border-radius: 100px;
+    cursor: pointer;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.15s ease;
+  }
+  .toolbar-btn:hover { background: #000; }
+  .toolbar-btn.secondary {
+    background: transparent;
+    color: var(--ink-soft);
+    border: 1px solid var(--line);
+  }
+  .toolbar-btn.secondary:hover { background: var(--bg); }
+  .toolbar-status {
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    letter-spacing: 0.3px;
+  }
+
+  /* ===== Main preview area ===== */
+  main {
+    flex: 1;
+    padding: 40px 24px 60px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  /* ===== MOBILE preview (iPhone frame) ===== */
+  .phone {
+    width: 432px;             /* 393px screen + 19px each side bezel */
+    background: #0e0e0e;
+    border-radius: 56px;
+    padding: 19px;
+    box-shadow:
+      0 50px 100px -30px rgba(0,0,0,0.45),
+      0 0 0 1px rgba(255,255,255,0.05) inset;
+    position: relative;
+  }
+  .phone-screen {
+    background: #ffffff;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    max-height: 880px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+  }
+  .phone-screen::-webkit-scrollbar { width: 4px; }
+  .phone-screen::-webkit-scrollbar-thumb { background: #ddd; border-radius: 4px; }
+  /* Dynamic Island */
+  .phone-island {
+    position: absolute;
+    top: 10px; left: 50%;
+    transform: translateX(-50%);
+    width: 120px; height: 32px;
+    background: #0e0e0e;
+    border-radius: 100px;
+    z-index: 5;
+  }
+  /* Status bar */
+  .phone-statusbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 28px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .phone-statusbar .icons { display: inline-flex; gap: 5px; align-items: center; font-size: 12px; }
+  .phone-statusbar .battery {
+    display: inline-block; width: 22px; height: 11px;
+    border: 1px solid var(--ink); border-radius: 3px; position: relative;
+    padding: 1px;
+  }
+  .phone-statusbar .battery::after {
+    content: ''; position: absolute; right: -3px; top: 3px; width: 2px; height: 5px;
+    background: var(--ink); border-radius: 0 1px 1px 0;
+  }
+  .phone-statusbar .battery span {
+    display: block; width: 80%; height: 100%; background: var(--ink); border-radius: 1px;
+  }
+  /* App header bar */
+  .app-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 16px 12px;
+    font-size: 18px;
+    color: var(--ink);
+  }
+  .app-header .left, .app-header .right {
+    display: inline-flex;
+    gap: 18px;
+    align-items: center;
+  }
+  .app-header button {
+    background: none;
+    border: none;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+  }
+
+  /* Image carousel */
+  .carousel {
+    position: relative;
+    overflow: hidden;
+    background: #000;
+  }
+  .carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .carousel-track::-webkit-scrollbar { display: none; }
+  .carousel-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    position: relative;
+    scroll-snap-align: center;
+    background: #000;
+    overflow: hidden;
+  }
+  .carousel-slide iframe {
+    width: 1242px;
+    height: 1656px;
+    border: 0;
+    transform-origin: top left;
+    transform: scale(calc(393 / 1242));
+    /* 393/1242 ≈ 0.3164; written as calc for documentation */
+    background: white;
+    pointer-events: none;
+  }
+  .carousel-slide .download-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 100px;
+    font-size: 11.5px;
+    font-weight: 500;
+    cursor: pointer;
+    backdrop-filter: blur(8px);
+    z-index: 3;
+    letter-spacing: 0.2px;
+  }
+  .carousel-slide .download-btn:hover { background: rgba(0,0,0,0.75); }
+  .carousel-slide .download-btn.busy { opacity: 0.6; cursor: wait; }
+  .carousel-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    gap: 5px;
+    background: rgba(0,0,0,0.35);
+    padding: 4px 10px;
+    border-radius: 100px;
+    z-index: 3;
+  }
+  .carousel-dots span {
+    width: 5px; height: 5px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+  .carousel-dots span.active {
+    background: white;
+    width: 16px;
+    border-radius: 100px;
+  }
+  .carousel-counter {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    padding: 4px 11px;
+    border-radius: 100px;
+    font-size: 11.5px;
+    font-weight: 500;
+    z-index: 3;
+    letter-spacing: 0.2px;
+  }
+
+  /* Author row */
+  .author-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+  }
+  .avatar {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ff7a8a, #ff2442);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
+  .author-meta { flex: 1; min-width: 0; }
+  .author-name { font-size: 14.5px; font-weight: 600; color: var(--ink); }
+  .author-bio { font-size: 12px; color: var(--ink-faint); margin-top: 2px; }
+  .follow-btn {
+    background: var(--xhs-red);
+    color: white;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 100px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  /* Post content */
+  .post-title {
+    font-size: 17px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--ink);
+    padding: 0 16px 8px;
+  }
+  .post-body {
+    font-size: 14.5px;
+    line-height: 1.65;
+    color: var(--ink);
+    padding: 0 16px 12px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .post-tags {
+    padding: 0 16px 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .post-tag {
+    color: var(--tag-ink);
+    font-size: 13.5px;
+    line-height: 1.4;
+  }
+  .post-meta {
+    padding: 4px 16px 16px;
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  /* Action bar */
+  .action-bar {
+    border-top: 1px solid var(--line);
+    padding: 12px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel);
+    position: sticky;
+    bottom: 0;
+  }
+  .action-bar .actions {
+    display: inline-flex;
+    gap: 16px;
+    color: var(--ink-soft);
+    font-size: 13px;
+  }
+  .action-bar .actions span {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+  }
+  .action-bar .comment-input {
+    flex: 1;
+    margin-right: 14px;
+    background: var(--bg);
+    border-radius: 100px;
+    padding: 8px 14px;
+    font-size: 13px;
+    color: var(--ink-faint);
+  }
+
+  /* ===== DESKTOP preview (web layout) ===== */
+  .web-preview {
+    display: none;
+    width: 100%;
+    max-width: 1120px;
+    background: var(--panel);
+    border-radius: 16px;
+    box-shadow: 0 20px 50px -20px rgba(0,0,0,0.18);
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: 600px 1fr;
+    min-height: 720px;
+  }
+  .web-preview[hidden] { display: none !important; }
+  .web-img-area {
+    background: #0e0e0e;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .web-img-area .web-slide {
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    position: relative;
+  }
+  .web-img-area iframe {
+    width: 1242px;
+    height: 1656px;
+    border: 0;
+    transform-origin: top left;
+    transform: scale(calc(600 / 1242));
+    pointer-events: none;
+    background: white;
+  }
+  .web-nav {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: inline-flex;
+    gap: 8px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 100px;
+    padding: 6px 8px;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  }
+  .web-nav button {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+  .web-nav button:hover { background: var(--bg); }
+  .web-nav .web-counter {
+    align-self: center;
+    font-size: 12px;
+    color: var(--ink-soft);
+    padding: 0 6px;
+  }
+  .web-img-area .download-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(0,0,0,0.55);
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 100px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    z-index: 3;
+  }
+  .web-side {
+    padding: 28px 28px 80px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    max-height: 880px;
+  }
+  .web-side .author-row { padding: 0 0 18px; border-bottom: 1px solid var(--line); }
+  .web-side .post-title { font-size: 20px; padding: 18px 0 8px; }
+  .web-side .post-body { font-size: 15px; padding: 0 0 16px; }
+  .web-side .post-tags { padding: 0 0 16px; }
+  .web-side .post-meta { padding: 4px 0 20px; border-bottom: 1px solid var(--line); }
+  .web-side .web-comments {
+    padding: 18px 0 0;
+    color: var(--ink-faint);
+    font-size: 13.5px;
+  }
+  .web-side .web-comments h4 {
+    font-size: 14.5px;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+  }
+  .web-side .web-comments .ph {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 14px 16px;
+    text-align: center;
+    color: var(--ink-faint);
+    font-size: 13px;
+  }
+
+  /* ===== Mode toggle visibility ===== */
+  body[data-mode="mobile"] .web-preview { display: none; }
+  body[data-mode="desktop"] .phone { display: none; }
+
+  /* Off-screen capture target (for high-res PNG export) */
+  .capture-target {
+    position: fixed;
+    top: -99999px;
+    left: -99999px;
+    width: 1242px;
+    height: 1656px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: -1;
+  }
+  .capture-target iframe { width: 1242px; height: 1656px; border: 0; }
+
+  /* Caption editor sidebar (collapsed by default, opens via toolbar button) */
+  .caption-editor {
+    position: fixed;
+    top: 60px;
+    right: -440px;
+    width: 420px;
+    height: calc(100vh - 60px);
+    background: var(--panel);
+    border-left: 1px solid var(--line);
+    box-shadow: -10px 0 30px -10px rgba(0,0,0,0.1);
+    transition: right 0.3s ease;
+    overflow-y: auto;
+    padding: 24px;
+    z-index: 9;
+  }
+  .caption-editor.open { right: 0; }
+  .caption-editor h2 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--ink);
+  }
+  .caption-editor label {
+    display: block;
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-weight: 500;
+    margin: 14px 0 5px;
+    letter-spacing: 0.3px;
+  }
+  .caption-editor input,
+  .caption-editor textarea {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 10px 12px;
+    font: inherit;
+    font-size: 13.5px;
+    background: var(--bg);
+  }
+  .caption-editor input:focus,
+  .caption-editor textarea:focus { outline: none; border-color: var(--xhs-red); background: white; }
+  .caption-editor textarea { min-height: 200px; resize: vertical; font-family: inherit; line-height: 1.6; }
+  .caption-editor .save-status {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    margin-top: 8px;
+    font-style: italic;
+  }
+
+  @media (max-width: 900px) {
+    .web-preview { grid-template-columns: 1fr; }
+    .web-img-area .web-slide { aspect-ratio: 3/4; }
+    .web-img-area iframe { transform: scale(calc(100vw / 1242)); }
+    .caption-editor { width: 100vw; right: -100vw; top: 0; height: 100vh; }
+  }
+  @media (max-width: 500px) {
+    .phone { width: calc(100vw - 32px); padding: 14px; border-radius: 44px; }
+    .phone-screen { border-radius: 30px; }
+    .carousel-slide iframe { transform: scale(calc((100vw - 60px) / 1242)); }
+  }
+</style>
+</head>
+<body data-mode="mobile">
+
+  <!-- ===== Toolbar ===== -->
+  <header class="toolbar">
+    <div class="brand">小红书图文 <span class="accent">预览</span></div>
+    <div class="toolbar-status" id="status">— loading —</div>
+    <div class="toolbar-spacer"></div>
+    <div class="toggle">
+      <button data-mode="mobile" class="active">📱 手机</button>
+      <button data-mode="desktop">💻 网页</button>
+    </div>
+    <button class="toolbar-btn secondary" id="btn-caption">编辑文案</button>
+    <button class="toolbar-btn" id="btn-download-all">下载全部 PNG</button>
+  </header>
+
+  <!-- ===== Caption editor sidebar ===== -->
+  <aside class="caption-editor" id="captionEditor">
+    <h2>编辑这条小红书的文案</h2>
+    <label>标题</label>
+    <input type="text" id="ed-title" maxlength="40">
+    <label>正文</label>
+    <textarea id="ed-body" rows="14"></textarea>
+    <label>话题标签（用空格或逗号分隔）</label>
+    <input type="text" id="ed-tags">
+    <label>作者名</label>
+    <input type="text" id="ed-name">
+    <p class="save-status">改完点 toolbar 的「关闭文案」按钮即可保存到 localStorage</p>
+  </aside>
+
+  <!-- ===== Main preview ===== -->
+  <main>
+    <!-- Mobile preview -->
+    <div class="phone" id="phonePreview">
+      <div class="phone-island"></div>
+      <div class="phone-screen">
+        <div class="phone-statusbar">
+          <span>9:41</span>
+          <span class="icons">
+            <span>📶</span>
+            <span class="battery"><span></span></span>
+          </span>
+        </div>
+        <div class="app-header">
+          <div class="left">
+            <button aria-label="back">‹</button>
+          </div>
+          <div class="right">
+            <button aria-label="share">⌧</button>
+            <button aria-label="more">⋯</button>
+          </div>
+        </div>
+        <div class="carousel" id="mobileCarousel">
+          <div class="carousel-track" id="mobileTrack"></div>
+          <div class="carousel-counter" id="mobileCounter">1/10</div>
+          <div class="carousel-dots" id="mobileDots"></div>
+        </div>
+
+        <div class="author-row">
+          <div class="avatar" id="m-avatar">M</div>
+          <div class="author-meta">
+            <div class="author-name" id="m-name">作者</div>
+            <div class="author-bio" id="m-bio">小红书 · 成都</div>
+          </div>
+          <button class="follow-btn">关注</button>
+        </div>
+
+        <div class="post-title" id="m-title">标题</div>
+        <div class="post-body" id="m-body">正文加载中…</div>
+        <div class="post-tags" id="m-tags"></div>
+        <div class="post-meta" id="m-meta">刚刚发布</div>
+
+        <div class="action-bar">
+          <div class="comment-input">说点什么…</div>
+          <div class="actions">
+            <span id="m-likes">♡ 0</span>
+            <span id="m-comments">💬 0</span>
+            <span id="m-collects">☆ 0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Desktop preview -->
+    <div class="web-preview" id="webPreview" hidden>
+      <div class="web-img-area">
+        <div class="web-slide" id="webSlide">
+          <iframe id="webIframe" src=""></iframe>
+        </div>
+        <button class="download-btn" id="webDownloadBtn">下载本张 PNG</button>
+        <div class="web-nav">
+          <button id="webPrev" aria-label="previous">←</button>
+          <span class="web-counter" id="webCounter">1 / 10</span>
+          <button id="webNext" aria-label="next">→</button>
+        </div>
+      </div>
+      <div class="web-side">
+        <div class="author-row">
+          <div class="avatar" id="w-avatar">M</div>
+          <div class="author-meta">
+            <div class="author-name" id="w-name">作者</div>
+            <div class="author-bio" id="w-bio">小红书 · 成都</div>
+          </div>
+          <button class="follow-btn">关注</button>
+        </div>
+        <h1 class="post-title" id="w-title">标题</h1>
+        <div class="post-body" id="w-body">正文加载中…</div>
+        <div class="post-tags" id="w-tags"></div>
+        <div class="post-meta" id="w-meta">刚刚发布</div>
+        <div class="web-comments">
+          <h4>评论 <span id="w-comments">0</span></h4>
+          <div class="ph">这是预览，没真的评论 :)</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Off-screen capture target for high-res PNG -->
+  <div class="capture-target" id="captureTarget"></div>
+
+<script>
+'use strict';
+
+const cfg = window.CARDS_CONFIG;
+if (!cfg || !cfg.cards || !cfg.cards.length) {
+  document.body.innerHTML = '<div style="padding:60px;font-family:sans-serif">cards.config.js 未加载或为空。请先在 cards.config.js 里列出卡片文件。</div>';
+  throw new Error('no config');
+}
+
+// =========== Render post text into all the post slots (mobile + desktop) ===========
+function renderPost() {
+  const p = cfg.post || {};
+  const cap = loadCaption();   // localStorage override (so editor edits persist)
+  const post = { ...p, ...cap };
+
+  ['m', 'w'].forEach(prefix => {
+    const $ = id => document.getElementById(prefix + '-' + id);
+    const name = post.author_name || 'museum-of-us';
+    if ($('name')) $('name').textContent = name;
+    if ($('bio'))  $('bio').textContent = `${post.author_bio || ''}${post.location ? ' · ' + post.location : ''}`;
+    if ($('avatar')) $('avatar').textContent = (name[0] || 'M').toUpperCase();
+    if ($('title')) $('title').textContent = post.title || '';
+    if ($('body'))  $('body').textContent = post.body || '';
+    if ($('tags')) {
+      $('tags').innerHTML = '';
+      (post.hashtags || []).forEach(t => {
+        const el = document.createElement('span');
+        el.className = 'post-tag';
+        el.textContent = '#' + t;
+        $('tags').appendChild(el);
+      });
+    }
+    if ($('meta'))  $('meta').textContent = (new Date()).getMonth() + 1 + '月' + new Date().getDate() + '日 · 编辑于刚刚';
+  });
+
+  const stats = post.stats || {};
+  setText('m-likes',    '♡ ' + (stats.likes    || '0'));
+  setText('m-comments', '💬 ' + (stats.comments || '0'));
+  setText('m-collects', '☆ ' + (stats.collects || '0'));
+  setText('w-comments', stats.comments || '0');
+}
+function setText(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+
+// =========== Render the mobile carousel ===========
+const track = document.getElementById('mobileTrack');
+const dotsBox = document.getElementById('mobileDots');
+const counter = document.getElementById('mobileCounter');
+
+function renderMobileCarousel() {
+  track.innerHTML = '';
+  dotsBox.innerHTML = '';
+  cfg.cards.forEach((src, i) => {
+    const slide = document.createElement('div');
+    slide.className = 'carousel-slide';
+    const iframe = document.createElement('iframe');
+    iframe.src = src;
+    iframe.loading = 'lazy';
+    slide.appendChild(iframe);
+    const btn = document.createElement('button');
+    btn.className = 'download-btn';
+    btn.textContent = '↓ PNG';
+    btn.addEventListener('click', e => { e.stopPropagation(); downloadCard(i, btn); });
+    slide.appendChild(btn);
+    track.appendChild(slide);
+
+    const dot = document.createElement('span');
+    if (i === 0) dot.classList.add('active');
+    dotsBox.appendChild(dot);
+  });
+  counter.textContent = `1/${cfg.cards.length}`;
+}
+
+// Track which slide is active via scroll position
+track.addEventListener('scroll', () => {
+  const i = Math.round(track.scrollLeft / track.clientWidth);
+  setMobileActive(i);
+});
+function setMobileActive(i) {
+  Array.from(dotsBox.children).forEach((d, k) => d.classList.toggle('active', k === i));
+  counter.textContent = `${i + 1}/${cfg.cards.length}`;
+}
+
+// =========== Desktop carousel ===========
+let webIndex = 0;
+const webIframe = document.getElementById('webIframe');
+function renderWebSlide() {
+  webIframe.src = cfg.cards[webIndex];
+  document.getElementById('webCounter').textContent = `${webIndex + 1} / ${cfg.cards.length}`;
+}
+document.getElementById('webPrev').addEventListener('click', () => {
+  webIndex = (webIndex - 1 + cfg.cards.length) % cfg.cards.length;
+  renderWebSlide();
+});
+document.getElementById('webNext').addEventListener('click', () => {
+  webIndex = (webIndex + 1) % cfg.cards.length;
+  renderWebSlide();
+});
+document.getElementById('webDownloadBtn').addEventListener('click', () => {
+  downloadCard(webIndex, document.getElementById('webDownloadBtn'));
+});
+
+// =========== Mode toggle ===========
+document.querySelectorAll('.toggle button').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.toggle button').forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    const mode = b.dataset.mode;
+    document.body.dataset.mode = mode;
+    document.getElementById('webPreview').hidden = (mode !== 'desktop');
+    if (mode === 'desktop') renderWebSlide();
+  });
+});
+
+// =========== Caption editor sidebar ===========
+const editor = document.getElementById('captionEditor');
+const btnCaption = document.getElementById('btn-caption');
+btnCaption.addEventListener('click', () => {
+  if (editor.classList.contains('open')) {
+    // Closing → save + re-render
+    saveCaption();
+    renderPost();
+    editor.classList.remove('open');
+    btnCaption.textContent = '编辑文案';
+  } else {
+    populateEditor();
+    editor.classList.add('open');
+    btnCaption.textContent = '关闭文案';
+  }
+});
+function populateEditor() {
+  const p = { ...(cfg.post || {}), ...loadCaption() };
+  document.getElementById('ed-title').value = p.title || '';
+  document.getElementById('ed-body').value = p.body || '';
+  document.getElementById('ed-tags').value = (p.hashtags || []).join(' ');
+  document.getElementById('ed-name').value = p.author_name || '';
+}
+function saveCaption() {
+  const tags = document.getElementById('ed-tags').value
+    .split(/[\s,，]+/).map(t => t.replace(/^#/, '').trim()).filter(Boolean);
+  const cap = {
+    title: document.getElementById('ed-title').value,
+    body: document.getElementById('ed-body').value,
+    hashtags: tags,
+    author_name: document.getElementById('ed-name').value,
+  };
+  localStorage.setItem('xhs_preview_caption', JSON.stringify(cap));
+}
+function loadCaption() {
+  try { return JSON.parse(localStorage.getItem('xhs_preview_caption') || '{}'); }
+  catch (e) { return {}; }
+}
+
+// =========== Download single card as PNG (high-res 1242x1656) ===========
+async function downloadCard(idx, btn) {
+  const src = cfg.cards[idx];
+  const filename = src.split('/').pop().replace(/\.html$/, '.png');
+  if (btn) { btn.classList.add('busy'); btn.disabled = true; btn.dataset.before = btn.textContent; btn.textContent = '生成中…'; }
+
+  // Build a temporary off-screen iframe at native size
+  const target = document.getElementById('captureTarget');
+  target.innerHTML = '';
+  const frame = document.createElement('iframe');
+  frame.src = src;
+  frame.style.width = '1242px';
+  frame.style.height = '1656px';
+  frame.style.border = '0';
+  target.appendChild(frame);
+
+  await new Promise(resolve => {
+    frame.onload = () => setTimeout(resolve, 800); // wait for fonts + images
+  });
+
+  try {
+    const doc = frame.contentDocument;
+    const canvas = await html2canvas(doc.body, {
+      width: 1242,
+      height: 1656,
+      windowWidth: 1242,
+      windowHeight: 1656,
+      scale: 1,
+      useCORS: true,
+      logging: false,
+      backgroundColor: null,
+    });
+    canvas.toBlob(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = filename;
+      document.body.appendChild(a); a.click(); a.remove();
+      URL.revokeObjectURL(url);
+    }, 'image/png');
+  } catch (e) {
+    alert('下载失败：' + (e && e.message || e));
+  } finally {
+    if (btn) { btn.classList.remove('busy'); btn.disabled = false; btn.textContent = btn.dataset.before; }
+    target.innerHTML = '';
+  }
+}
+
+// =========== Download all PNGs in sequence ===========
+document.getElementById('btn-download-all').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-download-all');
+  const orig = btn.textContent;
+  btn.disabled = true;
+  for (let i = 0; i < cfg.cards.length; i++) {
+    btn.textContent = `下载中 ${i + 1}/${cfg.cards.length}…`;
+    // eslint-disable-next-line no-await-in-loop
+    await downloadCard(i, null);
+    // small gap so the browser actually flushes the download
+    // eslint-disable-next-line no-await-in-loop
+    await new Promise(r => setTimeout(r, 400));
+  }
+  btn.textContent = orig;
+  btn.disabled = false;
+  alert('全部下载完成。');
+});
+
+// =========== Boot ===========
+renderMobileCarousel();
+renderPost();
+document.getElementById('status').textContent = `${cfg.cards.length} 张图 · ${cfg.post && cfg.post.title ? '已加载' : '无文案'}`;
+</script>
+
+</body>
+</html>

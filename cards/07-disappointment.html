@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>07 · 失望档案</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ede2c8; --paper:#f7efd9;
+    --ink:#2a2010; --ink-soft:#5a4a30; --ink-faint:#8a7656;
+    --wax:#8b2a1e; --gold:#b08d57; --accent:#c64a3a;
+    --line:rgba(176,141,87,0.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:"Noto Serif SC",serif;color:var(--ink);
+    background:radial-gradient(120% 90% at 50% 0%, #f1e6cb 0%, #e6d8b5 60%, #d6c59b 100%);
+    position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(80,55,20,0.06) 1px, transparent 1.4px),
+      radial-gradient(rgba(80,55,20,0.04) 1px, transparent 1.2px);
+    background-size:7px 7px,13px 13px;background-position:0 0,3px 5px;
+    mix-blend-mode:multiply;opacity:.6;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.26em;text-transform:uppercase;
+  }
+  .topbar .num{font-style:normal;color:var(--wax);letter-spacing:.1em;font-weight:500}
+
+  .big{
+    position:absolute;left:90px;top:160px;right:90px;
+    font-family:"Ma Shan Zheng",serif;
+    font-size:118px;line-height:1.05;color:var(--ink);letter-spacing:.02em;
+  }
+  .big .em{color:var(--wax)}
+  .deck{
+    position:absolute;left:96px;top:380px;right:90px;
+    font-family:"Noto Serif SC",serif;color:var(--ink-soft);
+    font-size:28px;line-height:1.55;letter-spacing:.04em;font-weight:500;
+  }
+  .deck b{color:var(--wax);font-weight:600}
+  .deck-en{
+    position:absolute;left:96px;top:486px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.22em;
+  }
+
+  /* 房间标识 */
+  .room-tag{
+    position:absolute;right:90px;top:160px;
+    width:140px;height:140px;
+    background:var(--paper);border:1px solid var(--gold);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Ma Shan Zheng",serif;font-size:96px;color:var(--wax);
+    box-shadow:0 8px 16px -8px rgba(60,40,15,0.4);
+    transform:rotate(3deg);
+  }
+  .room-tag::before{
+    content:"ROOM · VI";position:absolute;left:50%;top:-22px;transform:translateX(-50%);
+    background:var(--bg);padding:0 12px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-size:16px;
+    color:var(--gold);letter-spacing:.28em;
+    white-space:nowrap;
+  }
+  .room-tag::after{
+    content:"对账";position:absolute;left:50%;bottom:-20px;transform:translateX(-50%);
+    background:var(--bg);padding:0 10px;
+    font-family:"Noto Serif SC",serif;font-size:18px;
+    color:var(--ink-soft);letter-spacing:.16em;
+  }
+
+  /* 纸条卡片 */
+  .card{
+    position:absolute;left:90px;right:90px;top:560px;
+    background:
+      linear-gradient(180deg, #fbf4dd 0%, #f3e7c0 100%);
+    border:1px solid rgba(90,74,48,0.35);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.7) inset,
+      0 30px 56px -28px rgba(60,40,15,0.5);
+    padding:50px 60px 58px;
+  }
+  /* 横线纹 */
+  .card::before{
+    content:"";position:absolute;left:60px;right:60px;top:160px;bottom:60px;
+    background:repeating-linear-gradient(180deg,
+      transparent 0 47px,
+      rgba(139,42,30,0.15) 47px 48px);
+    pointer-events:none;
+  }
+  .card .head{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding-bottom:18px;border-bottom:1px solid var(--line);margin-bottom:30px;
+  }
+  .card .head h3{
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+    color:var(--wax);font-size:24px;letter-spacing:.3em;text-transform:uppercase;
+  }
+  .card .head h3 b{
+    font-family:"Noto Serif SC",serif;font-style:normal;font-weight:600;
+    color:var(--ink);font-size:28px;letter-spacing:.06em;margin-left:14px;
+  }
+  .card .head .who{
+    font-family:"Noto Serif SC",serif;color:var(--ink-faint);
+    font-size:18px;letter-spacing:.15em;
+  }
+
+  .entry{position:relative;z-index:2}
+  .entry .label{
+    display:inline-block;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    background:var(--ink);color:var(--paper);
+    padding:4px 14px;
+    font-size:18px;letter-spacing:.28em;text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  .entry .label.reply{background:var(--wax)}
+  .entry .text{
+    font-family:"Noto Serif SC",serif;font-weight:500;
+    color:var(--ink);font-size:30px;line-height:48px;letter-spacing:.04em;
+  }
+  .entry .text em{color:var(--wax);font-style:normal;font-weight:600}
+  .entry .time{
+    margin-top:8px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:18px;letter-spacing:.2em;
+  }
+
+  /* 她的回应（缩进） */
+  .reply-block{
+    margin-top:30px;padding-left:50px;
+    position:relative;
+  }
+  .reply-block::before{
+    content:"";position:absolute;left:0;top:6px;bottom:6px;width:3px;
+    background:linear-gradient(180deg, var(--wax), transparent);
+  }
+  .reply-block .text{
+    font-size:24px;line-height:38px;color:var(--ink-soft);font-weight:500;
+  }
+  .reply-block .text em{color:var(--accent);font-style:normal}
+  .reply + .reply{margin-top:18px}
+
+  /* 底部说明 */
+  .footer-note{
+    position:absolute;left:90px;right:90px;bottom:110px;
+    text-align:center;
+    font-family:"Noto Serif SC",serif;color:var(--ink-soft);font-size:24px;
+    letter-spacing:.1em;
+  }
+  .footer-note::before, .footer-note::after{
+    content:"";display:inline-block;width:60px;height:1px;background:var(--gold);vertical-align:middle;margin:0 18px;
+  }
+  .footer-note b{color:var(--wax);font-weight:500}
+
+  .corner{
+    position:absolute;right:80px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:20px;letter-spacing:.28em;
+    text-transform:uppercase;text-align:right;line-height:1.5;
+  }
+  .pageno{
+    position:absolute;left:90px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.28em;
+  }
+  .pageno b{color:var(--wax);font-weight:500;font-style:normal}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>房间 · VI · 失望档案</span>
+    <span class="num">07 / 09</span>
+  </div>
+
+  <h1 class="big">
+    我自己列的<br>
+    <span class="em">失误</span>清单
+  </h1>
+  <div class="room-tag">痕</div>
+  <div class="deck">他先写下他回头看的失误，她可以在每条下回应。<b>不是用来吵架的，是用来对账的。</b></div>
+  <div class="deck-en">a ledger of small failures, with room for her reply</div>
+
+  <div class="card">
+    <div class="head">
+      <h3>Entry · <b>03</b></h3>
+      <div class="who">他写 · 她回</div>
+    </div>
+
+    <div class="entry">
+      <span class="label">他写 · HIM</span>
+      <div class="text">
+        三月二十六号你说要吃糖醋排骨，<br>
+        我回了一句"那家太远了，下次"。<br>
+        <em>那是你那周第三次叫我陪你吃饭。</em>
+      </div>
+      <div class="time">— logged on 05 · 18 · 23 : 47</div>
+    </div>
+
+    <div class="reply-block">
+      <div class="reply">
+        <span class="label reply">她回 · HER</span>
+        <div class="text">
+          我那天其实查好了路线，<br>
+          地铁过去 22 分钟。
+        </div>
+      </div>
+      <div class="reply">
+        <span class="label reply">她回 · HER</span>
+        <div class="text">
+          你说"下次"的时候，<em>语气和工作邮件一样</em>。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">他写一条，<b>她可以回，也可以不回</b>，都算数</div>
+
+  <div class="pageno">No. <b>07</b> · LEDGER</div>
+  <div class="corner">THE MUSEUM OF US<br>A 520 Project</div>
+</body>
+</html>

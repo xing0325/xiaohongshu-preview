@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>01 · 封面</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ede2c8; --paper:#f7efd9;
+    --ink:#2a2010; --ink-soft:#5a4a30; --ink-faint:#8a7656;
+    --wax:#8b2a1e; --gold:#b08d57; --accent:#c64a3a;
+    --line:rgba(176,141,87,0.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#cdbfa3}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:"Noto Serif SC","Source Han Serif SC",serif;
+    color:var(--ink);
+    background:
+      radial-gradient(120% 80% at 50% 0%, #f1e6cb 0%, #e6d8b5 55%, #d6c59b 100%);
+    position:relative;
+  }
+  /* 纸纹噪点 */
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(80,55,20,0.07) 1px, transparent 1.4px),
+      radial-gradient(rgba(80,55,20,0.05) 1px, transparent 1.2px);
+    background-size: 7px 7px, 13px 13px;
+    background-position: 0 0, 3px 5px;
+    mix-blend-mode:multiply;
+    opacity:.55;
+  }
+  body::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(60% 50% at 50% 55%, transparent 0%, rgba(60,40,15,0.18) 100%);
+  }
+
+  /* 顶部小标签 */
+  .topbar{
+    position:absolute;top:60px;left:0;right:0;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:0 90px;
+    font-family:"Cormorant Garamond",serif;
+    font-size:22px;letter-spacing:.32em;
+    color:var(--ink-soft);text-transform:uppercase;
+  }
+  .topbar .dot{display:inline-block;width:6px;height:6px;background:var(--wax);border-radius:50%;margin:0 14px;transform:translateY(-3px)}
+  .topbar .right{font-style:italic;letter-spacing:.18em}
+
+  /* 中间信封 */
+  .stage{
+    position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+    width:780px;height:520px;
+  }
+  .env{
+    position:absolute;inset:0;
+    background:
+      linear-gradient(180deg,#f6ecd0 0%, #efe2bf 100%);
+    border:1px solid rgba(90,74,48,0.45);
+    box-shadow:
+      0 2px 0 rgba(255,255,255,0.6) inset,
+      0 -1px 0 rgba(60,40,15,0.18) inset,
+      0 40px 80px -30px rgba(60,40,15,0.55),
+      0 18px 28px -16px rgba(60,40,15,0.35);
+  }
+  /* 信封的翻盖（V 形） */
+  .flap{
+    position:absolute;left:0;right:0;top:0;height:300px;
+    background:linear-gradient(180deg,#f1e3bd 0%, #e6d4a8 100%);
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+    border-bottom:1px solid rgba(90,74,48,0.35);
+    box-shadow:0 1px 0 rgba(255,255,255,0.5) inset;
+  }
+  .flap::after{
+    content:"";position:absolute;left:0;right:0;top:0;bottom:0;
+    background:
+      linear-gradient(180deg, rgba(60,40,15,0) 60%, rgba(60,40,15,0.08) 100%);
+    clip-path:polygon(0 0, 100% 0, 50% 100%);
+  }
+  /* 信封侧边线 */
+  .env::before{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:240px;
+    background:
+      linear-gradient(135deg, transparent 49.6%, rgba(90,74,48,0.22) 49.6%, rgba(90,74,48,0.22) 50.4%, transparent 50.4%),
+      linear-gradient(45deg, transparent 49.6%, rgba(90,74,48,0.22) 49.6%, rgba(90,74,48,0.22) 50.4%, transparent 50.4%);
+  }
+
+  /* 火漆封印 */
+  .wax{
+    position:absolute;left:50%;top:300px;transform:translate(-50%,-50%);
+    width:172px;height:172px;border-radius:50%;
+    background:
+      radial-gradient(circle at 35% 30%, #c0533f 0%, #9b2e20 40%, #6e1a10 80%, #4a0f08 100%);
+    box-shadow:
+      0 0 0 1px rgba(40,8,4,0.5),
+      0 14px 22px -6px rgba(60,15,8,0.55),
+      inset 0 8px 16px rgba(255,180,160,0.18),
+      inset 0 -10px 20px rgba(20,0,0,0.55);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Ma Shan Zheng",serif;
+    font-size:96px;color:#f3d8c8;
+    text-shadow:0 -2px 0 rgba(20,0,0,0.6), 0 2px 0 rgba(255,200,180,0.25);
+    z-index:2;
+  }
+  /* 火漆边缘锯齿 */
+  .wax::before{
+    content:"";position:absolute;inset:-8px;border-radius:50%;
+    background:
+      conic-gradient(from 0deg,
+        #8b2a1e 0deg, #6e1a10 8deg, #8b2a1e 16deg, #6e1a10 24deg,
+        #8b2a1e 32deg, #6e1a10 40deg, #8b2a1e 48deg, #6e1a10 56deg,
+        #8b2a1e 64deg, #6e1a10 72deg, #8b2a1e 80deg, #6e1a10 88deg,
+        #8b2a1e 96deg, #6e1a10 104deg, #8b2a1e 112deg, #6e1a10 120deg,
+        #8b2a1e 128deg, #6e1a10 136deg, #8b2a1e 144deg, #6e1a10 152deg,
+        #8b2a1e 160deg, #6e1a10 168deg, #8b2a1e 176deg, #6e1a10 184deg,
+        #8b2a1e 192deg, #6e1a10 200deg, #8b2a1e 208deg, #6e1a10 216deg,
+        #8b2a1e 224deg, #6e1a10 232deg, #8b2a1e 240deg, #6e1a10 248deg,
+        #8b2a1e 256deg, #6e1a10 264deg, #8b2a1e 272deg, #6e1a10 280deg,
+        #8b2a1e 288deg, #6e1a10 296deg, #8b2a1e 304deg, #6e1a10 312deg,
+        #8b2a1e 320deg, #6e1a10 328deg, #8b2a1e 336deg, #6e1a10 344deg, #8b2a1e 360deg);
+    filter:blur(3px);
+    z-index:-1;
+    opacity:.85;
+  }
+  .wax::after{
+    content:"";position:absolute;inset:14px;border-radius:50%;
+    border:1.5px dashed rgba(255,210,190,0.35);
+  }
+
+  /* 主标题 */
+  .headline{
+    position:absolute;left:0;right:0;top:200px;
+    text-align:center;
+    font-family:"Ma Shan Zheng",serif;
+    color:var(--ink);
+    font-size:108px;
+    line-height:1.18;
+    letter-spacing:.04em;
+    text-shadow:0 2px 0 rgba(255,250,230,0.6);
+  }
+  .headline .row{display:block}
+  .headline .num{
+    color:var(--wax);
+    font-family:"Cormorant Garamond",serif;
+    font-style:italic;
+    font-weight:500;
+    font-size:128px;
+    margin:0 .08em;
+    vertical-align:-6px;
+  }
+  .headline .small{
+    font-family:"Noto Serif SC",serif;
+    font-weight:500;
+    font-size:54px;
+    color:var(--ink-soft);
+  }
+
+  /* 副标题 */
+  .sub{
+    position:absolute;left:0;right:0;bottom:280px;
+    text-align:center;
+    font-family:"Noto Serif SC",serif;
+    color:var(--ink-soft);
+    font-size:38px;
+    letter-spacing:.05em;
+    font-weight:500;
+  }
+  .sub::before, .sub::after{
+    content:"";display:inline-block;width:90px;height:1px;
+    background:var(--gold);
+    vertical-align:middle;margin:0 24px;
+  }
+
+  /* 底部装饰 */
+  .meta{
+    position:absolute;left:0;right:0;bottom:140px;
+    display:flex;justify-content:center;gap:42px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:26px;letter-spacing:.22em;
+  }
+  .meta span{display:flex;align-items:center;gap:14px}
+  .meta i{display:inline-block;width:5px;height:5px;background:var(--wax);border-radius:50%}
+
+  /* 右下角标 */
+  .corner{
+    position:absolute;right:80px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.28em;
+    text-transform:uppercase;
+    text-align:right;line-height:1.4;
+  }
+  .corner b{display:block;font-weight:500;color:var(--ink-soft);letter-spacing:.32em}
+
+  /* 左下印章 */
+  .stamp{
+    position:absolute;left:90px;bottom:120px;
+    width:160px;height:160px;
+    border:3px double var(--wax);
+    transform:rotate(-8deg);
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Ma Shan Zheng",serif;
+    color:var(--wax);
+    font-size:36px;line-height:1;text-align:center;
+    opacity:.78;
+    background:rgba(247,239,217,0.35);
+  }
+  .stamp::before{
+    content:"";position:absolute;inset:8px;border:1px solid var(--wax);opacity:.6;
+  }
+
+  /* 顶角装饰横线 */
+  .topline{
+    position:absolute;left:90px;right:90px;top:140px;height:1px;
+    background:linear-gradient(90deg,transparent,var(--gold),transparent);
+    opacity:.6;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>致 · 冯小扣<span class="dot"></span>第 6 7 天</span>
+    <span class="right">5 · 20 · 2026</span>
+  </div>
+  <div class="topline"></div>
+
+  <div class="headline">
+    <span class="row">她在 <span class="num">8:26</span> 打开了链接</span>
+    <span class="row" style="font-size:84px">停留了 <span class="num">5</span>分<span class="num">31</span>秒</span>
+  </div>
+
+  <div class="stage" aria-hidden="true">
+    <div class="env">
+      <div class="flap"></div>
+    </div>
+    <div class="wax">扣</div>
+  </div>
+
+  <div class="sub">我用两天的时间，给她做了一个网站求和好</div>
+
+  <div class="meta">
+    <span><i></i>一封信</span>
+    <span><i></i>一座馆</span>
+    <span><i></i>一次回头</span>
+  </div>
+
+  <div class="stamp">私<br>人<br>项<br>目</div>
+
+  <div class="corner">
+    <b>The Museum of Us</b>
+    A 520 Project · No.001
+  </div>
+</body>
+</html>

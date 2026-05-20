@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>05 · 我们的档案馆</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ede2c8; --paper:#f7efd9;
+    --ink:#2a2010; --ink-soft:#5a4a30; --ink-faint:#8a7656;
+    --wax:#8b2a1e; --gold:#b08d57; --accent:#c64a3a;
+    --line:rgba(176,141,87,0.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:"Noto Serif SC",serif;color:var(--ink);
+    background:radial-gradient(120% 90% at 50% 0%, #f1e6cb 0%, #e6d8b5 60%, #d6c59b 100%);
+    position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(80,55,20,0.06) 1px, transparent 1.4px),
+      radial-gradient(rgba(80,55,20,0.04) 1px, transparent 1.2px);
+    background-size:7px 7px,13px 13px;background-position:0 0,3px 5px;
+    mix-blend-mode:multiply;opacity:.6;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.26em;text-transform:uppercase;
+  }
+  .topbar .num{font-style:normal;color:var(--wax);letter-spacing:.1em;font-weight:500}
+
+  .big{
+    position:absolute;left:90px;top:160px;right:90px;
+    font-family:"Ma Shan Zheng",serif;
+    font-size:124px;line-height:1.05;color:var(--ink);letter-spacing:.02em;
+  }
+  .big .em{color:var(--wax)}
+  .deck{
+    position:absolute;left:96px;top:340px;right:90px;
+    font-family:"Noto Serif SC",serif;font-weight:500;
+    color:var(--ink-soft);font-size:32px;letter-spacing:.06em;line-height:1.5;
+  }
+  .deck::before{
+    content:"信之后是档案馆";display:inline-block;
+    color:var(--wax);font-weight:600;margin-right:14px;
+  }
+  .deck::after{
+    content:"——一个可以一直回来的地方";
+  }
+  .deck-en{
+    position:absolute;left:96px;top:418px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:24px;letter-spacing:.22em;
+  }
+
+  /* 6 房间网格 */
+  .grid{
+    position:absolute;left:90px;right:90px;top:520px;
+    display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(2,1fr);
+    gap:30px;
+    height:920px;
+  }
+  .room{
+    position:relative;
+    background:var(--paper);
+    border:1px solid rgba(90,74,48,0.32);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.7) inset,
+      0 16px 26px -16px rgba(60,40,15,0.35);
+    padding:36px 30px 28px;
+    display:flex;flex-direction:column;justify-content:space-between;
+    overflow:hidden;
+  }
+  /* 房间瓷砖纹理 */
+  .room::before{
+    content:"";position:absolute;inset:8px;border:1px solid var(--line);pointer-events:none;
+  }
+  .room::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:
+      radial-gradient(80% 60% at 50% 0%, rgba(255,250,230,0.5) 0%, transparent 60%),
+      radial-gradient(60% 60% at 100% 100%, rgba(60,40,15,0.08) 0%, transparent 60%);
+  }
+
+  .room .no{
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--gold);font-size:20px;letter-spacing:.3em;
+    text-transform:uppercase;
+  }
+  .room .glyph{
+    font-family:"Ma Shan Zheng",serif;
+    font-size:230px;line-height:.9;color:var(--ink);
+    text-align:center;
+    text-shadow:0 2px 0 rgba(255,250,230,0.5);
+    margin:-14px 0 -10px;
+    position:relative;
+  }
+  .room.feat .glyph{color:var(--wax)}
+  .room.feat{background:linear-gradient(180deg, #fbf4dd 0%, #f4e9c5 100%)}
+
+  .room .name{
+    font-family:"Noto Serif SC",serif;font-weight:600;
+    color:var(--ink);font-size:32px;letter-spacing:.12em;text-align:center;
+  }
+  .room .name s{
+    display:block;font-weight:500;font-size:18px;color:var(--ink-faint);
+    letter-spacing:.05em;margin-top:6px;text-decoration:none;
+    font-family:"Noto Serif SC",serif;
+  }
+  .room .meta{
+    display:flex;justify-content:space-between;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:16px;letter-spacing:.18em;
+    border-top:1px solid var(--line);padding-top:12px;margin-top:14px;
+  }
+  .room .meta b{color:var(--wax);font-style:normal;font-weight:500}
+
+  /* 房间角的小图标 */
+  .room .corner-mark{
+    position:absolute;right:20px;top:20px;
+    width:24px;height:24px;border:1px solid var(--gold);
+    transform:rotate(45deg);opacity:.5;
+  }
+  .room .corner-mark::before{
+    content:"";position:absolute;inset:5px;border:1px solid var(--gold);
+  }
+
+  /* 底部说明 */
+  .footer-note{
+    position:absolute;left:90px;right:90px;bottom:90px;
+    display:flex;align-items:center;gap:24px;
+    font-family:"Noto Serif SC",serif;color:var(--ink-soft);font-size:22px;
+    letter-spacing:.08em;
+  }
+  .footer-note i{flex:1;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .footer-note b{color:var(--wax);font-weight:500}
+
+  .corner{
+    position:absolute;right:80px;bottom:34px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:18px;letter-spacing:.28em;
+    text-transform:uppercase;text-align:right;
+  }
+  .pageno{
+    position:absolute;left:90px;bottom:34px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:20px;letter-spacing:.28em;
+  }
+  .pageno b{color:var(--wax);font-weight:500;font-style:normal}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>第三步 · THE MUSEUM</span>
+    <span class="num">05 / 09</span>
+  </div>
+
+  <h1 class="big">
+    信不是终点，<br>
+    是<span class="em">入</span><span class="em">口</span>。
+  </h1>
+  <div class="deck"></div>
+  <div class="deck-en">six rooms, one quiet building, opens whenever you knock</div>
+
+  <div class="grid">
+    <div class="room">
+      <div class="corner-mark"></div>
+      <div class="no">Room · I</div>
+      <div class="glyph">寂</div>
+      <div>
+        <div class="name">冷战日记<s>JI · the silence diary</s></div>
+        <div class="meta"><span>67 天</span><b>每日一行</b></div>
+      </div>
+    </div>
+
+    <div class="room feat">
+      <div class="corner-mark"></div>
+      <div class="no">Room · II</div>
+      <div class="glyph">度</div>
+      <div>
+        <div class="name">心情档案<s>DU · how warm today</s></div>
+        <div class="meta"><span>5 档色卡</span><b>今日 · 凉</b></div>
+      </div>
+    </div>
+
+    <div class="room">
+      <div class="corner-mark"></div>
+      <div class="no">Room · III</div>
+      <div class="glyph">言</div>
+      <div>
+        <div class="name">想说的话<s>YAN · what we owe each other</s></div>
+        <div class="meta"><span>留言箱</span><b>待回 · 3</b></div>
+      </div>
+    </div>
+
+    <div class="room">
+      <div class="corner-mark"></div>
+      <div class="no">Room · IV</div>
+      <div class="glyph">始</div>
+      <div>
+        <div class="name">我们的第一次<s>SHI · the firsts</s></div>
+        <div class="meta"><span>12 件</span><b>持续添加</b></div>
+      </div>
+    </div>
+
+    <div class="room">
+      <div class="corner-mark"></div>
+      <div class="no">Room · V</div>
+      <div class="glyph">烙</div>
+      <div>
+        <div class="name">印象最深<s>LAO · the burns we keep</s></div>
+        <div class="meta"><span>双方各 7</span><b>对照阅读</b></div>
+      </div>
+    </div>
+
+    <div class="room feat">
+      <div class="corner-mark"></div>
+      <div class="no">Room · VI</div>
+      <div class="glyph">痕</div>
+      <div>
+        <div class="name">失望档案<s>HEN · what we missed</s></div>
+        <div class="meta"><span>他写她回</span><b>对账模式</b></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <i></i><span>所有房间都<b>只你我可见</b>，离开时门会自动关上</span><i></i>
+  </div>
+
+  <div class="pageno">No. <b>05</b> · MUSEUM</div>
+  <div class="corner">THE MUSEUM OF US</div>
+</body>
+</html>

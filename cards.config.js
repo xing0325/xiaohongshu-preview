@@ -1,0 +1,75 @@
+// ============================================================
+//  Cards & post config for the 小红书 preview workspace.
+//  Edit this file to:
+//    1. List the HTML cards (in 小红书 display order)
+//    2. Set the post text / hashtags / author info
+//  Reload index.html after editing.
+// ============================================================
+
+window.CARDS_CONFIG = {
+  // Card files in the order they should appear on 小红书 (left → right swipe).
+  // Each file should be a 1242 × 1656 standalone HTML (relative to this folder).
+  cards: [
+    'cards/01-cover.html',
+    'cards/02-origin.html',
+    'cards/03-letter.html',
+    'cards/04-signature.html',
+    'cards/05-museum.html',
+    'cards/06-mood.html',
+    'cards/07-disappointment.html',
+    'cards/08-channel.html',
+    'cards/10-howto.html',
+    'cards/09-cta.html',
+  ],
+
+  // The post itself (caption / hashtags / author).
+  post: {
+    author_name: 'museum-of-us',
+    author_bio: '熬过冷战，做了个网站',
+    location: '成都',
+    title: '冷战 62 天，我用两天给她做了一个网站',
+    body: `跟女朋友冷战两个多月了。
+
+不是她小题大做。是我真的、长期地、忽视了她。她一直坦诚地、热烈地、平和地跟我说她在想什么；我每次都"嗯""好""知道了"。她每次都能接住我，可我撑得住的时候、她需要我的时候，我没在。
+
+5 月 18 号晚上，离 520 还有两天，我突然不想再发那种"在吗""对不起"的微信了。文字她见太多了，廉价。
+
+我打开电脑，开始写一个网站。只给她一个人。
+
+断断续续 vibe coding 了两天，5 月 20 日凌晨上线，把链接发给了她。
+
+她早上 8:26 用 iPhone 打开了。停留了 5 分 31 秒。没签名，没留言，关掉了。
+
+——我知道，她至少把那封信读完了。
+
+后来我想，可能不止我一个人，在 520 这天，想跟一个人好好说句话，但又说不出口。所以我把它整理成了一个产品，叫「Museum of Us · 我们的档案馆」。
+
+打开是一封信。米色信纸，火漆红的封蜡，上面是她的名字。轻轻一点，蜡裂开。信是你自己写的，毛笔字标题，宋体正文，你可以配一首歌，让双语歌词在屏幕顶端慢慢滚。
+
+信的末尾是一块签名画布。签名就代表她答应你，520 那天一起吃顿饭。不签也没关系，她可以留一段话。
+
+信之后是一间档案馆，留给她：
+每天点一个心情色带（凉了 / 闷闷的 / 还行 / 暖暖的 / 心动了），可以写冷战日记，可以记下"想对他说但他不一定看得到的话"。
+
+我还做了一个失望档案——先由我自己写下我做错过的事，一条一条列出来，她可以在每条下面回应我。
+
+她每次什么时候来、停留多久、做了什么，我都能看到。
+就这一点点，已经够了。
+
+链接放评论区。不保证她会回，但至少，比一句"对不起"重一点。
+
+—
+
+也想听听你们的故事。冷战多久了，谁先低的头，最后好了吗。`,
+
+    hashtags: [
+      '520', '挽回', '情侣', '冷战', '和好',
+      '程序员的浪漫', '手工网站', '给她的礼物',
+      '异地恋', 'vibecoding', '独立开发', '真诚才是必杀技'
+    ],
+
+    // Numbers shown in the action bar (likes / comments / collects).
+    // Fake-but-realistic for preview purposes.
+    stats: { likes: '12.3k', comments: '234', collects: '78' },
+  },
+};

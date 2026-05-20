@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>09 · CTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Noto+Serif+SC:wght@400;500;600;700&family=Ma+Shan+Zheng&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#ede2c8; --paper:#f7efd9;
+    --ink:#2a2010; --ink-soft:#5a4a30; --ink-faint:#8a7656;
+    --wax:#8b2a1e; --gold:#b08d57; --accent:#c64a3a;
+    --line:rgba(176,141,87,0.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:"Noto Serif SC",serif;color:var(--ink);
+    background:radial-gradient(120% 90% at 50% 0%, #f1e6cb 0%, #e6d8b5 60%, #d6c59b 100%);
+    position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(80,55,20,0.06) 1px, transparent 1.4px),
+      radial-gradient(rgba(80,55,20,0.04) 1px, transparent 1.2px);
+    background-size:7px 7px,13px 13px;background-position:0 0,3px 5px;
+    mix-blend-mode:multiply;opacity:.6;
+  }
+  body::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:radial-gradient(50% 40% at 50% 60%, transparent 0%, rgba(60,40,15,0.18) 100%);
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.26em;text-transform:uppercase;
+  }
+  .topbar .num{font-style:normal;color:var(--wax);letter-spacing:.1em;font-weight:500}
+
+  .big{
+    position:absolute;left:0;right:0;top:180px;
+    text-align:center;
+    font-family:"Ma Shan Zheng",serif;
+    font-size:156px;line-height:1;color:var(--ink);letter-spacing:.04em;
+  }
+  .big .em{color:var(--wax)}
+  .big .row2{
+    display:block;margin-top:14px;font-size:106px;color:var(--ink-soft);
+  }
+  .big .row2 b{color:var(--wax)}
+
+  .sub{
+    position:absolute;left:0;right:0;top:560px;text-align:center;
+    font-family:"Noto Serif SC",serif;font-weight:500;
+    color:var(--ink-soft);font-size:36px;letter-spacing:.12em;
+  }
+  .sub::before, .sub::after{
+    content:"";display:inline-block;width:80px;height:1px;background:var(--gold);
+    vertical-align:middle;margin:0 22px;
+  }
+  .sub-en{
+    position:absolute;left:0;right:0;top:620px;text-align:center;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:26px;letter-spacing:.26em;
+  }
+
+  /* 开口信封 */
+  .stage{
+    position:absolute;left:50%;top:740px;transform:translateX(-50%);
+    width:680px;height:480px;
+  }
+  /* 信封主体 */
+  .env-body{
+    position:absolute;left:0;right:0;bottom:0;height:360px;
+    background:linear-gradient(180deg, #f1e3bd 0%, #e6d4a8 100%);
+    border:1px solid rgba(90,74,48,0.45);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.5) inset,
+      0 -2px 0 rgba(60,40,15,0.18) inset,
+      0 40px 70px -28px rgba(60,40,15,0.55);
+    overflow:hidden;
+  }
+  /* 信封侧边线 */
+  .env-body::before{
+    content:"";position:absolute;left:0;right:0;bottom:0;height:280px;
+    background:
+      linear-gradient(135deg, transparent 49.6%, rgba(90,74,48,0.22) 49.6%, rgba(90,74,48,0.22) 50.4%, transparent 50.4%),
+      linear-gradient(45deg, transparent 49.6%, rgba(90,74,48,0.22) 49.6%, rgba(90,74,48,0.22) 50.4%, transparent 50.4%);
+  }
+  /* 翻开的盖子 */
+  .flap-open{
+    position:absolute;left:50%;top:0;transform:translateX(-50%);
+    width:680px;height:260px;
+    background:linear-gradient(180deg, #ecde b1 0%, #d8c69a 100%);
+    background:linear-gradient(180deg, #ecdeb1 0%, #d8c69a 100%);
+    clip-path:polygon(0 100%, 100% 100%, 50% 0);
+    transform-origin:50% 100%;
+    transform:translateX(-50%) rotateX(35deg);
+    border:1px solid rgba(90,74,48,0.3);
+    box-shadow:0 -10px 20px -10px rgba(60,40,15,0.3);
+    opacity:.92;
+  }
+  /* 信封内部阴影 */
+  .env-body::after{
+    content:"";position:absolute;left:0;right:0;top:0;height:60px;
+    background:linear-gradient(180deg, rgba(60,40,15,0.25), transparent);
+  }
+
+  /* 从信封伸出的纸条 */
+  .note{
+    position:absolute;left:50%;top:50px;transform:translateX(-50%) rotate(-2.5deg);
+    width:380px;padding:34px 36px 30px;
+    background:var(--paper);
+    border:1px solid rgba(90,74,48,0.35);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.7) inset,
+      0 20px 30px -16px rgba(60,40,15,0.4);
+    z-index:2;
+  }
+  .note .l{
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+    color:var(--gold);font-size:18px;letter-spacing:.32em;text-transform:uppercase;
+    text-align:center;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:14px;
+  }
+  .note .v{
+    font-family:"Cormorant Garamond",serif;font-style:italic;font-weight:500;
+    color:var(--wax);font-size:78px;letter-spacing:.04em;text-align:center;line-height:1;
+  }
+  .note .cn{
+    text-align:center;margin-top:12px;
+    font-family:"Noto Serif SC",serif;font-weight:600;
+    color:var(--ink);font-size:28px;letter-spacing:.16em;
+  }
+  .note .cn::before, .note .cn::after{content:"·";margin:0 10px;color:var(--gold)}
+
+  /* 信封封面装饰 */
+  .env-deco{
+    position:absolute;left:50%;bottom:30px;transform:translateX(-50%);
+    text-align:center;color:var(--ink-faint);
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    font-size:18px;letter-spacing:.3em;
+    z-index:3;
+  }
+  .env-deco b{
+    display:block;font-style:normal;font-weight:500;color:var(--ink-soft);
+    font-family:"Noto Serif SC",serif;font-size:22px;letter-spacing:.16em;
+    margin-top:4px;
+  }
+
+  /* URL 条 */
+  .url-strip{
+    position:absolute;left:0;right:0;bottom:330px;
+    text-align:center;
+  }
+  .url-strip .url-lbl{
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:20px;letter-spacing:.32em;
+    text-transform:uppercase;margin-bottom:14px;
+  }
+  .url-strip .url{
+    display:inline-block;
+    padding:14px 32px;
+    background:var(--ink);color:var(--paper);
+    font-family:ui-monospace,"SF Mono",Consolas,monospace;
+    font-size:28px;letter-spacing:.04em;
+    border-radius:6px;
+    box-shadow:0 8px 22px -10px rgba(60,35,10,0.45);
+  }
+
+  /* 三个 chip */
+  .chips{
+    position:absolute;left:0;right:0;bottom:230px;
+    display:flex;justify-content:center;gap:30px;
+  }
+  .chip{
+    padding:14px 26px;
+    background:rgba(247,239,217,0.7);
+    border:1px solid var(--line);
+    font-family:"Noto Serif SC",serif;font-weight:500;
+    color:var(--ink-soft);font-size:22px;letter-spacing:.14em;
+    box-shadow:0 1px 0 rgba(255,255,255,0.5) inset;
+  }
+  .chip b{color:var(--wax);font-weight:600}
+  .chip i{color:var(--gold);margin:0 8px;font-style:normal}
+
+  /* 底部 © 一行 */
+  .bottom{
+    position:absolute;left:0;right:0;bottom:130px;text-align:center;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:24px;letter-spacing:.28em;
+  }
+  .bottom b{color:var(--wax);font-style:normal;font-weight:500}
+
+  .corner{
+    position:absolute;right:80px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:20px;letter-spacing:.28em;
+    text-transform:uppercase;text-align:right;line-height:1.5;
+  }
+  .pageno{
+    position:absolute;left:90px;bottom:60px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--ink-faint);font-size:22px;letter-spacing:.28em;
+  }
+  .pageno b{color:var(--wax);font-weight:500;font-style:normal}
+
+  /* 主标题上方装饰 */
+  .ribbon{
+    position:absolute;left:50%;top:140px;transform:translateX(-50%);
+    display:flex;align-items:center;gap:14px;
+    font-family:"Cormorant Garamond",serif;font-style:italic;
+    color:var(--gold);font-size:22px;letter-spacing:.32em;text-transform:uppercase;
+  }
+  .ribbon i{display:inline-block;width:5px;height:5px;background:var(--wax);border-radius:50%}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>邀请 · NOW OPEN</span>
+    <span class="num">09 / 09</span>
+  </div>
+
+  <div class="ribbon"><i></i>MAY 20 · 2026<i></i></div>
+
+  <h1 class="big">
+    今天 <span class="em">520</span>
+    <span class="row2">你也<b>可以</b></span>
+  </h1>
+
+  <div class="sub">Museum of Us · 现已开放给所有情侣</div>
+  <div class="sub-en">a quiet building for couples who need a slow door back</div>
+
+  <div class="stage" aria-hidden="true">
+    <div class="env-body"></div>
+    <div class="flap-open"></div>
+    <div class="note">
+      <div class="l">— invitation —</div>
+      <div class="v">Try Now</div>
+      <div class="cn">轻轻推门</div>
+    </div>
+    <div class="env-deco">— from us, to you —<b>The Museum of Us</b></div>
+  </div>
+
+  <div class="url-strip">
+    <div class="url-lbl">— open in browser —</div>
+    <div class="url">museum-of-us-520.netlify.app</div>
+  </div>
+
+  <div class="chips">
+    <div class="chip">完全 <b>免费</b><i>·</i>不打广告</div>
+    <div class="chip">数据 <b>只你和 ta</b></div>
+    <div class="chip">现在 <b>就能用</b></div>
+  </div>
+
+  <div class="bottom">© 520 · MMXXVI <b>·</b> made with restraint.</div>
+
+  <div class="pageno">No. <b>09</b> · INVITE</div>
+  <div class="corner">THE MUSEUM OF US<br>END · A 520 Project</div>
+</body>
+</html>
