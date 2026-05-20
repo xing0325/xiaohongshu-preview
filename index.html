@@ -10,16 +10,36 @@
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 <script src="cards.config.js"></script>
 <style>
-  :root {
-    --bg: #f5f5f5;
-    --panel: #ffffff;
+  :root,
+  body[data-theme="light"] {
+    --bg: #ebe7df;        /* 暖灰米色，不刺眼 */
+    --bg-deep: #e2ddd2;
+    --panel: #f5f1e8;     /* 米白，比纯白柔 */
     --ink: #1a1a1a;
     --ink-soft: #6b6b6b;
     --ink-faint: #999;
-    --line: #e8e8e8;
+    --line: #d8d3c7;
     --xhs-red: #ff2442;
-    --tag-bg: #f0f0f0;
+    --tag-bg: #f0ece2;
     --tag-ink: #5a8eda;
+    --arrow-bg: rgba(0,0,0,0.45);
+    --arrow-bg-hover: rgba(0,0,0,0.7);
+    --arrow-ink: white;
+  }
+  body[data-theme="dark"] {
+    --bg: #18181a;
+    --bg-deep: #0e0e10;
+    --panel: #232326;
+    --ink: #f2f2f2;
+    --ink-soft: #aaa;
+    --ink-faint: #777;
+    --line: #34343a;
+    --xhs-red: #ff4862;
+    --tag-bg: #2a2a2e;
+    --tag-ink: #88aef0;
+    --arrow-bg: rgba(255,255,255,0.18);
+    --arrow-bg-hover: rgba(255,255,255,0.32);
+    --arrow-ink: white;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { background: var(--bg); color: var(--ink); font-family: 'Inter', -apple-system, system-ui, 'PingFang SC', 'Hiragino Sans GB', sans-serif; }
@@ -215,6 +235,37 @@
     background: white;
     pointer-events: none;
   }
+  /* Arrow buttons (overlay on carousel, click to advance) */
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--arrow-bg);
+    color: var(--arrow-ink);
+    font-size: 24px;
+    line-height: 1;
+    cursor: pointer;
+    z-index: 4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    transition: background 0.15s ease, transform 0.1s ease;
+    padding-bottom: 2px;
+    opacity: 0.65;
+  }
+  .carousel:hover .carousel-arrow,
+  .carousel-arrow:focus-visible { opacity: 1; }
+  .carousel-arrow.prev { left: 10px; }
+  .carousel-arrow.next { right: 10px; }
+  .carousel-arrow:hover { background: var(--arrow-bg-hover); }
+  .carousel-arrow:active { transform: translateY(-50%) scale(0.92); }
+
   .carousel-slide .download-btn {
     position: absolute;
     top: 12px;
@@ -570,6 +621,7 @@
       <button data-mode="mobile" class="active">📱 手机</button>
       <button data-mode="desktop">💻 网页</button>
     </div>
+    <button class="toolbar-btn secondary" id="btn-theme" aria-label="切换主题" title="切换 黑 / 白 模式">🌙</button>
     <button class="toolbar-btn secondary" id="btn-caption">编辑文案</button>
     <button class="toolbar-btn" id="btn-download-all">下载全部 PNG</button>
   </header>
@@ -612,6 +664,8 @@
         </div>
         <div class="carousel" id="mobileCarousel">
           <div class="carousel-track" id="mobileTrack"></div>
+          <button class="carousel-arrow prev" id="mobilePrev" aria-label="上一张">‹</button>
+          <button class="carousel-arrow next" id="mobileNext" aria-label="下一张">›</button>
           <div class="carousel-counter" id="mobileCounter">1/10</div>
           <div class="carousel-dots" id="mobileDots"></div>
         </div>
@@ -893,6 +947,44 @@ document.getElementById('btn-download-all').addEventListener('click', async () =
   btn.textContent = orig;
   btn.disabled = false;
   alert('全部下载完成。');
+});
+
+// =========== Mobile carousel arrow navigation ===========
+function mobileGoto(i) {
+  const max = cfg.cards.length;
+  const target = ((i % max) + max) % max;
+  track.scrollTo({ left: target * track.clientWidth, behavior: 'smooth' });
+}
+document.getElementById('mobilePrev').addEventListener('click', () => {
+  const cur = Math.round(track.scrollLeft / track.clientWidth);
+  mobileGoto(cur - 1);
+});
+document.getElementById('mobileNext').addEventListener('click', () => {
+  const cur = Math.round(track.scrollLeft / track.clientWidth);
+  mobileGoto(cur + 1);
+});
+// Arrow keys also work
+document.addEventListener('keydown', e => {
+  if (document.body.dataset.mode !== 'mobile') return;
+  if (e.target.matches('input, textarea')) return;
+  if (e.key === 'ArrowLeft')  { const c = Math.round(track.scrollLeft / track.clientWidth); mobileGoto(c - 1); }
+  if (e.key === 'ArrowRight') { const c = Math.round(track.scrollLeft / track.clientWidth); mobileGoto(c + 1); }
+});
+
+// =========== Theme toggle (light / dark, persisted) ===========
+const themeBtn = document.getElementById('btn-theme');
+function applyTheme(t) {
+  document.body.dataset.theme = t;
+  themeBtn.textContent = (t === 'dark') ? '☀️' : '🌙';
+  themeBtn.title = (t === 'dark') ? '切到白天' : '切到黑夜';
+}
+const savedTheme = localStorage.getItem('xhs_preview_theme')
+  || (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+applyTheme(savedTheme);
+themeBtn.addEventListener('click', () => {
+  const next = (document.body.dataset.theme === 'dark') ? 'light' : 'dark';
+  localStorage.setItem('xhs_preview_theme', next);
+  applyTheme(next);
 });
 
 // =========== Boot ===========
