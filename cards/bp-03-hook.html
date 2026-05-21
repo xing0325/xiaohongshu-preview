@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>03 · hook · bypass-pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E12; --paper:#171720; --tile:#1F1F2A;
+    --ink:#E8E2D5; --ink-soft:#A39C8E; --ink-faint:#6B6557;
+    --red:#C4413A; --red-hot:#E5572F;
+    --yellow:#F2C94C; --green:#7A8475; --term:#5FB35A;
+    --line:rgba(232,226,213,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:'Noto Sans SC','Inter',sans-serif;color:var(--ink);
+    background:var(--bg);position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1.2px),
+      radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1.4px);
+    background-size:5px 5px,9px 9px;opacity:.5;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+  .topbar .num{color:var(--term);font-weight:700}
+
+  h1{
+    position:absolute;left:90px;top:140px;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:96px;line-height:1.04;color:var(--ink);letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--term)}
+  h1 small{
+    display:block;margin-top:18px;font-size:28px;color:var(--ink-faint);
+    font-weight:500;letter-spacing:.04em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  h1 small::before{content:"// "}
+
+  /* flowchart */
+  .flow{
+    position:absolute;left:90px;right:90px;top:440px;
+  }
+  .step{
+    display:flex;align-items:center;gap:24px;margin-bottom:18px;
+  }
+  .step .box{
+    flex:1;background:var(--paper);border:1px solid var(--line);
+    border-radius:10px;padding:22px 26px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .step .box.tool{border-left:5px solid var(--yellow)}
+  .step .box.hook{border-left:5px solid var(--term)}
+  .step .box.check{border-left:5px solid var(--ink-soft)}
+  .step .box.allow{
+    border-left:5px solid var(--term);
+    background:linear-gradient(180deg, rgba(95,179,90,0.16) 0%, var(--paper) 100%);
+  }
+  .step .box.defer{
+    border-left:5px solid var(--red);
+    background:linear-gradient(180deg, rgba(196,65,58,0.14) 0%, var(--paper) 100%);
+  }
+  .step .label{
+    font-size:18px;color:var(--ink-faint);letter-spacing:.16em;text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .step .text{
+    font-family:'Noto Sans SC',sans-serif;font-size:30px;color:var(--ink);
+    line-height:1.4;font-weight:500;
+  }
+  .step .text code{
+    background:#0c0c10;color:var(--term);padding:2px 8px;border-radius:4px;
+    font-family:'JetBrains Mono',monospace;font-size:25px;
+  }
+
+  .step .arrow{
+    color:var(--ink-faint);font-family:'JetBrains Mono',monospace;
+    font-size:34px;font-weight:700;
+  }
+
+  /* branching */
+  .branch{
+    display:flex;gap:18px;margin-top:6px;
+  }
+  .branch .box{flex:1}
+
+  .key{
+    position:absolute;left:90px;right:90px;bottom:180px;
+    padding:30px 38px;
+    background:linear-gradient(180deg, rgba(95,179,90,0.14) 0%, rgba(95,179,90,0.04) 100%);
+    border-left:6px solid var(--term);border-radius:4px;
+  }
+  .key .label{
+    font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--term);
+    letter-spacing:.2em;margin-bottom:14px;text-transform:uppercase;
+  }
+  .key .text{
+    font-family:'Noto Sans SC',sans-serif;font-size:32px;color:var(--ink);
+    line-height:1.5;font-weight:500;
+  }
+  .key .text code{
+    background:#0c0c10;color:var(--yellow);padding:3px 10px;border-radius:4px;
+    font-family:'JetBrains Mono',monospace;font-size:26px;
+  }
+
+  .footer{
+    position:absolute;bottom:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:20px;letter-spacing:.1em;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>BYPASS-PET · 原理</span>
+    <span><span class="num">03</span> / 09</span>
+  </div>
+
+  <h1>
+    用 <span class="em">PreToolUse</span> hook<br>
+    绕过那个 bug
+    <small>~/.claude/hooks/auto-approve.ps1</small>
+  </h1>
+
+  <div class="flow">
+    <div class="step">
+      <div class="box tool">
+        <div class="label">step 1 · CLAUDE 想干活</div>
+        <div class="text">要跑工具前 → 触发 <code>PreToolUse</code></div>
+      </div>
+    </div>
+    <div class="step"><div class="arrow" style="margin-left:50%">↓</div></div>
+    <div class="step">
+      <div class="box hook">
+        <div class="label">step 2 · HOOK 抢先跑</div>
+        <div class="text">脚本读哨兵文件 <code>.bypass-on</code> 在不在</div>
+      </div>
+    </div>
+    <div class="step"><div class="arrow" style="margin-left:50%">↓</div></div>
+    <div class="branch">
+      <div class="box allow">
+        <div class="label">step 3a · 文件存在</div>
+        <div class="text">输出 <code>"allow"</code><br>Claude 直接跑，不问你</div>
+      </div>
+      <div class="box defer">
+        <div class="label">step 3b · 文件不在</div>
+        <div class="text">啥都不输出<br>走原本流程（弹 allow）</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="key">
+    <div class="label">// 核心机制</div>
+    <div class="text">
+      一个空文件 = 一个开关。<br>
+      存在 → bypass · 不在 → 正常审批。<code>touch</code> 一下就翻面。
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>03 · the trick</span>
+    <span>github.com/xing0325/claude-bypass-hook</span>
+  </div>
+</body>
+</html>

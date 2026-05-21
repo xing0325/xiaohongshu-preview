@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>09 · CTA · bypass-pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E12; --paper:#171720; --tile:#1F1F2A;
+    --ink:#E8E2D5; --ink-soft:#A39C8E; --ink-faint:#6B6557;
+    --red:#C4413A; --red-deep:#7A1212;
+    --yellow:#F2C94C; --term:#5FB35A;
+    --line:rgba(232,226,213,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:'Noto Sans SC','Inter',sans-serif;color:var(--ink);
+    background:
+      radial-gradient(80% 70% at 50% 40%, #1c1c26 0%, #0E0E12 70%, #050507 100%);
+    position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.03) 1px, transparent 1.2px),
+      radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1.4px);
+    background-size:5px 5px,9px 9px;opacity:.6;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+  .topbar .num{color:var(--red);font-weight:700}
+
+  .stamp{
+    position:absolute;left:50%;top:200px;transform:translateX(-50%) rotate(-3deg);
+    padding:18px 60px;border:5px solid var(--yellow);border-radius:8px;
+    font-family:'Bowlby One SC','Noto Sans SC',sans-serif;
+    color:var(--yellow);font-size:54px;letter-spacing:.06em;
+    background:rgba(242,201,76,0.05);
+  }
+
+  h1{
+    position:absolute;left:90px;right:90px;top:380px;
+    text-align:center;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:130px;line-height:1.05;color:var(--ink);letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--yellow)}
+  h1 .em2{color:var(--red)}
+
+  .sub{
+    position:absolute;left:90px;right:90px;top:730px;
+    text-align:center;
+    font-family:'Noto Sans SC',sans-serif;font-size:36px;color:var(--ink-soft);
+    line-height:1.5;font-weight:500;
+  }
+  .sub b{color:var(--ink)}
+
+  /* prompt input mock */
+  .prompt{
+    position:absolute;left:120px;right:120px;top:900px;
+    background:var(--paper);border:1px solid var(--line);border-radius:14px;
+    padding:24px 28px;
+    box-shadow:0 24px 48px -16px rgba(0,0,0,0.7);
+  }
+  .prompt .hint{
+    font-family:'JetBrains Mono',monospace;font-size:18px;letter-spacing:.16em;
+    color:var(--ink-faint);text-transform:uppercase;margin-bottom:10px;
+  }
+  .prompt .hint::before{content:"// "}
+  .prompt .input{
+    font-family:'Noto Sans SC',sans-serif;font-size:38px;color:var(--ink);
+    font-weight:700;letter-spacing:.04em;display:flex;align-items:center;gap:14px;
+  }
+  .prompt .caret{
+    width:4px;height:42px;background:var(--yellow);animation:none;
+  }
+
+  /* tags row */
+  .tags{
+    position:absolute;left:90px;right:90px;top:1090px;
+    display:flex;flex-wrap:wrap;gap:14px;justify-content:center;
+  }
+  .tags .t{
+    font-family:'JetBrains Mono',monospace;font-size:20px;
+    padding:8px 16px;border-radius:999px;
+    background:rgba(196,65,58,0.1);color:var(--ink-soft);
+    border:1px solid rgba(196,65,58,0.3);
+    letter-spacing:.04em;
+  }
+
+  /* questions for engagement */
+  .ask{
+    position:absolute;left:90px;right:90px;top:1240px;
+    padding:30px 38px;background:var(--tile);border-radius:12px;
+    border-left:5px solid var(--red);
+  }
+  .ask .label{
+    font-family:'JetBrains Mono',monospace;font-size:20px;
+    color:var(--red);letter-spacing:.18em;text-transform:uppercase;margin-bottom:14px;
+  }
+  .ask .q{
+    font-family:'Noto Sans SC',sans-serif;font-size:28px;color:var(--ink);
+    line-height:1.6;font-weight:500;
+  }
+  .ask .q b{color:var(--yellow);font-weight:700}
+
+  .footer{
+    position:absolute;bottom:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:flex-end;
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:20px;letter-spacing:.1em;
+  }
+  .footer .handle{
+    font-family:'Noto Serif SC',serif;font-size:30px;font-weight:700;color:var(--ink);
+    font-style:italic;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>BYPASS-PET · CTA</span>
+    <span><span class="num">09</span> / 09</span>
+  </div>
+
+  <div class="stamp">EOF · 评论区取链接</div>
+
+  <h1>
+    评论 <span class="em">"1"</span><br>
+    把两个仓库 <span class="em2">发你</span>
+  </h1>
+
+  <div class="sub">
+    小红书不让外链 · <b>关注我 + 评论 1</b> 我私你 GitHub URL<br>
+    或者主页置顶 / 简介里也有
+  </div>
+
+  <div class="prompt">
+    <div class="hint">REPLY · IN COMMENTS</div>
+    <div class="input">1<span class="caret"></span></div>
+  </div>
+
+  <div class="tags">
+    <span class="t">#claude</span>
+    <span class="t">#vibe coding</span>
+    <span class="t">#build in public</span>
+    <span class="t">#独立开发</span>
+    <span class="t">#高三休学</span>
+    <span class="t">#像素艺术</span>
+  </div>
+
+  <div class="ask">
+    <div class="label">// reverse · 你聊聊</div>
+    <div class="q">
+      你也被这个 allow 按钮折磨过吗？<br>
+      或者，<b>你最想给 Claude 装一个什么样的小工具？</b>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="handle">@ xing0325</span>
+    <span>build in public · vibe coding · 第 N 篇</span>
+  </div>
+</body>
+</html>

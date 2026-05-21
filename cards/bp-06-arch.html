@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>06 · 架构 · bypass-pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E12; --paper:#171720; --tile:#1F1F2A;
+    --ink:#E8E2D5; --ink-soft:#A39C8E; --ink-faint:#6B6557;
+    --red:#C4413A; --red-deep:#7A1212;
+    --yellow:#F2C94C; --term:#5FB35A;
+    --line:rgba(232,226,213,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:'Noto Sans SC','Inter',sans-serif;color:var(--ink);
+    background:var(--bg);position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1.2px),
+      radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1.4px);
+    background-size:5px 5px,9px 9px;opacity:.5;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+  .topbar .num{color:var(--term);font-weight:700}
+
+  h1{
+    position:absolute;left:90px;top:140px;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:96px;line-height:1.04;color:var(--ink);letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--term)}
+  h1 small{
+    display:block;margin-top:18px;font-size:28px;color:var(--ink-faint);
+    font-weight:500;letter-spacing:.04em;font-family:'JetBrains Mono',monospace;
+  }
+  h1 small::before{content:"// "}
+
+  /* dependency stack */
+  .stack{
+    position:absolute;left:90px;right:90px;top:430px;
+  }
+
+  .layer{
+    background:var(--paper);border:1px solid var(--line);
+    border-radius:14px;padding:32px 38px;
+    box-shadow:0 18px 36px -16px rgba(0,0,0,0.6);
+    position:relative;
+  }
+  .layer.core{border-left:6px solid var(--term)}
+  .layer.skin{border-left:6px solid var(--red);margin-top:36px}
+
+  .layer .row{
+    display:flex;align-items:flex-start;gap:30px;
+  }
+  .layer .icon{
+    width:128px;height:128px;flex-shrink:0;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;
+    font-family:'JetBrains Mono',monospace;font-size:54px;font-weight:700;
+    line-height:1;
+  }
+  .layer.core .icon{
+    background:linear-gradient(135deg, rgba(95,179,90,0.16), rgba(95,179,90,0.04));
+    color:var(--term);border:2px solid var(--term);
+  }
+  .layer.skin .icon{
+    background:linear-gradient(135deg, rgba(196,65,58,0.16), rgba(196,65,58,0.04));
+    color:var(--red);border:2px solid var(--red);
+  }
+  .layer .icon b{font-size:18px;letter-spacing:.2em;display:block;margin-top:6px;color:var(--ink-soft)}
+
+  .layer .body{flex:1}
+  .layer .badge{
+    font-family:'JetBrains Mono',monospace;
+    font-size:18px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-faint);margin-bottom:10px;
+  }
+  .layer.core .badge b{color:var(--term);font-weight:700}
+  .layer.skin .badge b{color:var(--red);font-weight:700}
+
+  .layer .name{
+    font-family:'JetBrains Mono',monospace;font-weight:700;
+    font-size:38px;color:var(--ink);letter-spacing:.01em;margin-bottom:10px;
+  }
+  .layer .name .org{color:var(--ink-soft);font-weight:400}
+  .layer .desc{
+    font-family:'Noto Sans SC',sans-serif;font-size:24px;
+    color:var(--ink-soft);line-height:1.55;
+  }
+  .layer .desc em{color:var(--ink);font-style:normal;font-weight:700}
+  .layer .pill{
+    display:inline-block;font-family:'JetBrains Mono',monospace;font-size:18px;
+    padding:5px 12px;border-radius:999px;margin-top:14px;letter-spacing:.08em;
+    background:rgba(255,255,255,0.04);color:var(--ink-soft);
+    border:1px solid var(--line);
+  }
+  .layer.core .pill{color:var(--term);border-color:rgba(95,179,90,0.4)}
+  .layer.skin .pill{color:var(--red);border-color:rgba(196,65,58,0.4)}
+
+  .arrow-down{
+    position:absolute;left:50%;top:730px;transform:translateX(-50%);
+    color:var(--ink-faint);font-family:'JetBrains Mono',monospace;
+    font-size:30px;font-weight:700;letter-spacing:.04em;
+  }
+  .arrow-down::before{content:"depends on "}
+
+  .caption{
+    position:absolute;left:90px;right:90px;bottom:200px;
+    padding:30px 36px;background:var(--tile);border-left:5px solid var(--yellow);
+    border-radius:4px;
+    font-family:'Noto Sans SC',sans-serif;font-size:30px;line-height:1.55;
+    color:var(--ink);font-weight:500;
+  }
+  .caption .em{color:var(--yellow);font-weight:700}
+
+  .footer{
+    position:absolute;bottom:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:20px;letter-spacing:.1em;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>BYPASS-PET · 架构</span>
+    <span><span class="num">06</span> / 09</span>
+  </div>
+
+  <h1>
+    底层和外壳<br>
+    <span class="em">分两个仓库</span>
+    <small>one is required · one is optional</small>
+  </h1>
+
+  <div class="stack">
+    <div class="layer skin">
+      <div class="row">
+        <div class="icon">[pet]<b>OPTIONAL</b></div>
+        <div class="body">
+          <div class="badge">可选 · <b>视觉前端</b></div>
+          <div class="name">bypass-pet <span class="org">@ xing0325</span></div>
+          <div class="desc">
+            像素桌宠：浮在右下角的小球，<em>单击切换</em> / 拖动改位置 / 一眼可见状态。
+            想要花活就装，不要也能用。
+          </div>
+          <div class="pill">PySide6 · Windows</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow-down">↓</div>
+
+    <div class="layer core">
+      <div class="row">
+        <div class="icon">[hook]<b>REQUIRED</b></div>
+        <div class="body">
+          <div class="badge">必装 · <b>底层引擎</b></div>
+          <div class="name">claude-bypass-hook <span class="org">@ xing0325</span></div>
+          <div class="desc">
+            PreToolUse 钩子 + 哨兵文件 + 安装器。
+            <em>修了 Anthropic 那个 bug</em>。同事/朋友只要绕过 allow，装这一个就够。
+          </div>
+          <div class="pill">PowerShell · Windows</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="caption">
+    <span class="em">关注点分离：</span>引擎放底、表层皮肤可换。
+    哪天 Anthropic 修了 bug，桌宠还能继续做表情。
+  </div>
+
+  <div class="footer">
+    <span>06 · two repos</span>
+    <span>handoff: 一条 URL 就够 / 评论区</span>
+  </div>
+</body>
+</html>

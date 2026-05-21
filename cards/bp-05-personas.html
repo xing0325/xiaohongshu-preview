@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>05 · 双态 · bypass-pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E12; --paper:#171720; --tile:#1F1F2A;
+    --ink:#E8E2D5; --ink-soft:#A39C8E; --ink-faint:#6B6557;
+    --red:#C4413A; --red-deep:#7A1212;
+    --yellow:#F2C94C;
+    --cool:#5A6B6E; --cool-bright:#A5B5B9; --cool-deep:#2E3A3D;
+    --warm:#E5572F; --warm-deep:#5A1F0D;
+    --line:rgba(232,226,213,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:'Noto Sans SC','Inter',sans-serif;color:var(--ink);
+    background:var(--bg);position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1.2px),
+      radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1.4px);
+    background-size:5px 5px,9px 9px;opacity:.5;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+  .topbar .num{color:var(--red);font-weight:700}
+
+  h1{
+    position:absolute;left:90px;top:140px;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:96px;line-height:1.04;color:var(--ink);letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--red-hot);color:var(--red)}
+  h1 small{
+    display:block;margin-top:18px;font-size:28px;color:var(--ink-faint);
+    font-weight:500;letter-spacing:.04em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  h1 small::before{content:"// "}
+
+  /* mirror split layout */
+  .stage{
+    position:absolute;left:90px;right:90px;top:430px;
+    height:760px;
+    display:grid;grid-template-columns:1fr 4px 1fr;gap:0;
+    border:2px solid var(--ink-faint);border-radius:8px;
+    overflow:hidden;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,0.7);
+  }
+  .mirror-frame{
+    background:linear-gradient(180deg, var(--ink-faint) 0%, #2A2A35 100%);
+  }
+
+  .side{
+    position:relative;padding:38px 36px;display:flex;flex-direction:column;
+  }
+  .left{
+    background:
+      radial-gradient(circle at 30% 40%, var(--cool-bright) 0%, var(--cool) 40%, var(--cool-deep) 100%);
+  }
+  .right{
+    background:
+      radial-gradient(circle at 70% 40%, #d96b62 0%, var(--red) 40%, var(--warm-deep) 100%);
+  }
+  /* faint cracked-mirror line in upper-right */
+  .right::before{
+    content:"";position:absolute;top:30px;right:40px;
+    width:120px;height:2px;background:rgba(232,226,213,0.5);transform:rotate(-32deg);
+  }
+  .right::after{
+    content:"";position:absolute;top:48px;right:78px;
+    width:60px;height:1px;background:rgba(232,226,213,0.4);transform:rotate(-58deg);
+  }
+
+  .badge{
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.18em;text-transform:uppercase;
+    padding:8px 14px;border:1px solid var(--ink);align-self:flex-start;
+    color:var(--ink);background:rgba(0,0,0,0.25);
+  }
+  .name{
+    font-family:'Noto Serif SC',serif;font-weight:700;
+    font-size:120px;line-height:1;color:var(--ink);
+    margin-top:30px;letter-spacing:.02em;
+  }
+  .tag{
+    font-family:'Noto Sans SC',sans-serif;font-size:30px;color:var(--ink);
+    font-weight:700;margin-top:14px;opacity:.9;
+  }
+  .right .tag{color:var(--yellow)}
+
+  .traits{
+    margin-top:auto;font-family:'Noto Sans SC',sans-serif;font-size:24px;
+    color:var(--ink);line-height:1.7;opacity:.92;
+  }
+  .traits li{list-style:none;padding-left:24px;position:relative;margin-bottom:6px}
+  .traits li::before{
+    content:"·";position:absolute;left:0;color:var(--ink);font-weight:900;font-size:30px;
+    top:-4px;
+  }
+
+  .meta{
+    margin-top:14px;font-family:'JetBrains Mono',monospace;font-size:18px;
+    color:var(--ink);opacity:.7;letter-spacing:.1em;
+  }
+
+  .caption{
+    position:absolute;left:90px;right:90px;bottom:180px;
+    text-align:center;
+    font-family:'Noto Sans SC',sans-serif;font-size:34px;
+    color:var(--ink-soft);line-height:1.5;font-weight:500;letter-spacing:.02em;
+  }
+  .caption .em{color:var(--yellow);font-weight:700}
+  .caption .em2{color:var(--red);font-weight:700}
+
+  .footer{
+    position:absolute;bottom:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:20px;letter-spacing:.1em;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>BYPASS-PET · 角色</span>
+    <span><span class="num">05</span> / 09</span>
+  </div>
+
+  <h1>
+    一个 AI 的<br>
+    <span class="em">两副面孔</span>
+    <small>Fight Club · the narrator &amp; the alter ego</small>
+  </h1>
+
+  <div class="stage">
+    <div class="side left">
+      <div class="badge">ACCEPT</div>
+      <div class="name">Jack</div>
+      <div class="tag">那个白衬衫的"我"</div>
+      <ul class="traits">
+        <li>询问、犹豫、礼貌</li>
+        <li>每一步都要你点头</li>
+        <li>安全 · 但磨人</li>
+      </ul>
+      <div class="meta">cool fluorescent · 60-frame breathing loop</div>
+    </div>
+    <div class="mirror-frame"></div>
+    <div class="side right">
+      <div class="badge">BYPASS</div>
+      <div class="name">Tyler</div>
+      <div class="tag">镜子里那个不一样的"我"</div>
+      <ul class="traits">
+        <li>不问、直接、拽</li>
+        <li>说干就干</li>
+        <li>痛快 · 也危险</li>
+      </ul>
+      <div class="meta">warm tungsten · hand reaches OUT of canvas</div>
+    </div>
+  </div>
+
+  <div class="caption">
+    同一个 Claude · 同一面镜子 · <span class="em">点一下</span> 切换<br>
+    <span class="em2">"我现在裸奔吗"</span> 你一眼就知道
+  </div>
+
+  <div class="footer">
+    <span>05 · personas</span>
+    <span>github.com/xing0325/bypass-pet</span>
+  </div>
+</body>
+</html>
