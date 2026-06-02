@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>02 · 缘起 · bypass-pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E12; --paper:#171720; --tile:#1F1F2A;
+    --ink:#E8E2D5; --ink-soft:#A39C8E; --ink-faint:#6B6557;
+    --red:#C4413A; --red-hot:#E5572F;
+    --yellow:#F2C94C; --green:#7A8475; --term:#5FB35A;
+    --line:rgba(232,226,213,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:'Noto Sans SC','Inter',sans-serif;color:var(--ink);
+    background:var(--bg);position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1.2px),
+      radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1.4px);
+    background-size:5px 5px,9px 9px;opacity:.5;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+  .topbar .num{color:var(--red);font-weight:700}
+
+  h1{
+    position:absolute;left:90px;top:140px;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:104px;line-height:1.04;color:var(--ink);letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--red-hot)}
+  h1 small{
+    display:block;margin-top:18px;font-size:30px;color:var(--ink-faint);
+    font-weight:500;letter-spacing:.04em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  h1 small::before{content:"// "}
+
+  /* allow log column */
+  .log{
+    position:absolute;left:90px;top:430px;width:520px;
+    background:var(--paper);border-radius:12px;
+    border:1px solid var(--line);
+    padding:24px 26px;
+    font-family:'JetBrains Mono',monospace;font-size:21px;
+    color:var(--ink-soft);line-height:1.65;
+  }
+  .log .l{display:flex;align-items:center;gap:14px;padding:4px 0}
+  .log .t{color:var(--ink-faint);font-size:18px}
+  .log .a{color:var(--yellow);font-weight:700}
+  .log .gone{color:var(--red);text-decoration:line-through;opacity:.7}
+  .log .me{color:var(--term);font-weight:700}
+  .log .dim{color:var(--ink-faint)}
+  .log hr{border:none;border-top:1px dashed var(--line);margin:10px 0}
+
+  /* issues column */
+  .issues{
+    position:absolute;right:90px;top:430px;width:512px;
+  }
+  .issues .label{
+    font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--ink-faint);
+    letter-spacing:.16em;margin-bottom:18px;text-transform:uppercase;
+  }
+  .issues .label::before{content:"≡ "}
+  .iss{
+    display:block;padding:18px 22px;margin-bottom:14px;
+    background:var(--paper);border:1px solid var(--line);border-left:4px solid var(--red);
+    border-radius:6px;
+  }
+  .iss .num{
+    font-family:'JetBrains Mono',monospace;color:var(--red-hot);
+    font-size:22px;font-weight:700;letter-spacing:.04em;
+  }
+  .iss .ttl{
+    font-family:'Noto Sans SC',sans-serif;color:var(--ink);
+    font-size:22px;line-height:1.45;font-weight:500;margin-top:8px;
+  }
+  .iss .st{
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:18px;margin-top:10px;letter-spacing:.04em;
+  }
+  .iss .st .open{color:var(--red);font-weight:700}
+
+  /* punchline */
+  .punch{
+    position:absolute;left:90px;right:90px;bottom:200px;
+    padding:36px 44px;
+    background:linear-gradient(180deg, rgba(196,65,58,0.16) 0%, rgba(196,65,58,0.06) 100%);
+    border-left:6px solid var(--red);border-radius:4px;
+    font-family:'Noto Sans SC',sans-serif;font-size:38px;line-height:1.5;
+    color:var(--ink);font-weight:500;letter-spacing:.01em;
+  }
+  .punch .em{color:var(--red-hot);font-weight:700}
+  .punch small{
+    display:block;margin-top:14px;font-size:24px;color:var(--ink-soft);font-weight:400;
+    font-family:'JetBrains Mono',monospace;
+  }
+
+  .footer{
+    position:absolute;bottom:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:20px;letter-spacing:.1em;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>BYPASS-PET · 缘起</span>
+    <span><span class="num">02</span> / 09</span>
+  </div>
+
+  <h1>
+    被一个按钮<br>
+    <span class="em">折磨</span>了半个月
+    <small>tool_use.permission.allow</small>
+  </h1>
+
+  <div class="log">
+    <div class="l"><span class="t">10:14</span> <span class="a">[Allow]</span> <span>git push</span></div>
+    <div class="l"><span class="t">10:15</span> <span class="a">[Allow]</span> <span>npm install</span></div>
+    <div class="l"><span class="t">10:15</span> <span class="a">[Allow]</span> <span>rm -rf tmp/</span></div>
+    <div class="l"><span class="t">10:16</span> <span class="a">[Allow]</span> <span>curl ...</span></div>
+    <div class="l"><span class="t">10:16</span> <span class="a">[Allow]</span> <span>git push</span></div>
+    <div class="l"><span class="t">10:17</span> <span class="a">[Allow]</span> <span>git status</span></div>
+    <div class="l"><span class="t">10:17</span> <span class="a">[Allow]</span> <span>ls</span></div>
+    <hr>
+    <div class="l"><span class="t">10:18</span> <span class="me">我:</span> <span class="dim">settings.json &nbsp;defaultMode: bypassPermissions</span></div>
+    <div class="l"><span class="t">10:19</span> <span class="a">[Allow]</span> <span class="gone">git push</span></div>
+    <div class="l"><span class="t">10:19</span> <span class="me">我:</span> <span class="dim">?</span></div>
+  </div>
+
+  <div class="issues">
+    <div class="label">原来不是我设错</div>
+    <div class="iss">
+      <div class="num">#29026</div>
+      <div class="ttl">Desktop app ignores settings.json permissions.allow and defaultMode: bypassPermissions</div>
+      <div class="st">status: <span class="open">OPEN</span> · 7 months</div>
+    </div>
+    <div class="iss">
+      <div class="num">#38148</div>
+      <div class="ttl">Desktop Code tab ignores bypass permissions mode</div>
+      <div class="st">status: <span class="open">OPEN</span> · 4 months</div>
+    </div>
+    <div class="iss">
+      <div class="num">#55095</div>
+      <div class="ttl">Bypass permissions mode no longer appears in session UI</div>
+      <div class="st">status: <span class="open">OPEN</span> · recent</div>
+    </div>
+  </div>
+
+  <div class="punch">
+    官方知道、官方没修。<span class="em">等不动了，自己绕。</span>
+    <small>PreToolUse hook 是另一条独立的路 · 不被这个 bug 牵连</small>
+  </div>
+
+  <div class="footer">
+    <span>02 · the pain</span>
+    <span>github.com/xing0325/claude-bypass-hook</span>
+  </div>
+</body>
+</html>

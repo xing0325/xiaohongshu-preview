@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>07 · 部署 · bypass-pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E12; --paper:#171720; --tile:#1F1F2A;
+    --ink:#E8E2D5; --ink-soft:#A39C8E; --ink-faint:#6B6557;
+    --red:#C4413A;
+    --yellow:#F2C94C; --term:#5FB35A;
+    --line:rgba(232,226,213,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:'Noto Sans SC','Inter',sans-serif;color:var(--ink);
+    background:var(--bg);position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1.2px),
+      radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1.4px);
+    background-size:5px 5px,9px 9px;opacity:.5;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+  .topbar .num{color:var(--yellow);font-weight:700}
+
+  h1{
+    position:absolute;left:90px;top:140px;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:104px;line-height:1.04;color:var(--ink);letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--yellow)}
+  h1 small{
+    display:block;margin-top:18px;font-size:28px;color:var(--ink-faint);
+    font-weight:500;letter-spacing:.04em;font-family:'JetBrains Mono',monospace;
+  }
+  h1 small::before{content:"// "}
+
+  .step{
+    position:absolute;left:90px;right:90px;
+    background:#0a0a0d;border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 18px 36px -14px rgba(0,0,0,0.6);
+  }
+  .step .head{
+    display:flex;align-items:center;gap:18px;
+    padding:18px 24px;background:var(--tile);
+    border-bottom:1px solid var(--line);
+  }
+  .step .dots{display:flex;gap:8px}
+  .step .dots i{width:12px;height:12px;border-radius:50%;background:#ff5f57;display:block}
+  .step .dots i:nth-child(2){background:#febc2e}
+  .step .dots i:nth-child(3){background:#28c840}
+  .step .head .name{
+    font-family:'JetBrains Mono',monospace;font-size:20px;color:var(--ink-soft);
+    letter-spacing:.08em;
+  }
+  .step .head .badge{
+    margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:18px;
+    padding:4px 14px;border-radius:999px;letter-spacing:.1em;
+    background:rgba(242,201,76,0.16);color:var(--yellow);border:1px solid rgba(242,201,76,0.3);
+  }
+  .step .body{
+    padding:22px 26px;font-family:'JetBrains Mono',monospace;
+    font-size:23px;line-height:1.55;color:var(--ink);
+  }
+  .step .body .c{color:var(--term)}
+  .step .body .k{color:var(--yellow)}
+  .step .body .d{color:var(--ink-faint)}
+  .step .body .p{color:var(--red)}
+
+  .step .label{
+    position:absolute;top:-18px;left:30px;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:30px;color:var(--ink);
+    background:var(--yellow);padding:6px 18px;border-radius:6px;
+    letter-spacing:.04em;
+  }
+
+  /* positions */
+  .s1{top:430px}
+  .s2{top:780px}
+  .s3{top:1080px}
+
+  .note{
+    position:absolute;left:90px;right:90px;bottom:180px;
+    padding:24px 30px;background:rgba(196,65,58,0.1);border-left:4px solid var(--red);
+    border-radius:4px;
+    font-family:'Noto Sans SC',sans-serif;font-size:24px;color:var(--ink-soft);
+    line-height:1.5;
+  }
+  .note .em{color:var(--red);font-weight:700}
+
+  .footer{
+    position:absolute;bottom:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:20px;letter-spacing:.1em;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>BYPASS-PET · 三步上手</span>
+    <span><span class="num">07</span> / 09</span>
+  </div>
+
+  <h1>
+    Windows · <span class="em">三条命令</span><br>
+    装完
+    <small>PowerShell · est. 3 min · zero npm</small>
+  </h1>
+
+  <div class="step s1">
+    <div class="label">01</div>
+    <div class="head">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="name">克隆 + 装 hook</div>
+      <div class="badge">必装</div>
+    </div>
+    <div class="body">
+      <span class="d">PS&gt;</span> <span class="c">git clone</span> <span class="k">https://github.com/xing0325/claude-bypass-hook.git</span><br>
+      <span class="d">PS&gt;</span> <span class="c">cd</span> claude-bypass-hook<br>
+      <span class="d">PS&gt;</span> <span class="c">powershell</span> <span class="p">-ExecutionPolicy Bypass</span> <span class="c">-File</span> scripts\install.ps1
+    </div>
+  </div>
+
+  <div class="step s2">
+    <div class="label">02</div>
+    <div class="head">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="name">重启 Claude Code Desktop</div>
+      <div class="badge">必做</div>
+    </div>
+    <div class="body">
+      <span class="d">·</span> 系统托盘 → 右键 → <span class="k">Quit</span>（不是关窗）<br>
+      <span class="d">·</span> 重新打开<br>
+      <span class="d">·</span> bypass <span class="c">默认 ON</span>，立刻不再问 allow
+    </div>
+  </div>
+
+  <div class="step s3">
+    <div class="label">03</div>
+    <div class="head">
+      <div class="dots"><i></i><i></i><i></i></div>
+      <div class="name">（可选）装桌宠</div>
+      <div class="badge">可选</div>
+    </div>
+    <div class="body">
+      <span class="d">PS&gt;</span> <span class="c">git clone</span> <span class="k">https://github.com/xing0325/bypass-pet.git</span><br>
+      <span class="d">PS&gt;</span> <span class="c">cd</span> bypass-pet &amp;&amp; <span class="c">python</span> -m venv .venv<br>
+      <span class="d">PS&gt;</span> .\.venv\Scripts\Activate.ps1 &amp;&amp; <span class="c">pip install</span> -e .<br>
+      <span class="d">PS&gt;</span> <span class="c">python</span> -m bypass_pet
+    </div>
+  </div>
+
+  <div class="note">
+    <span class="em">提醒：</span>等价于 <code style="font-family:'JetBrains Mono',monospace;color:var(--yellow)">--dangerously-skip-permissions</code>。
+    模型说 rm 就 rm，说 push 就 push。沙盒里跑或心里有数再开。
+  </div>
+
+  <div class="footer">
+    <span>07 · 3 commands</span>
+    <span>uninstall.ps1 一行清退</span>
+  </div>
+</body>
+</html>

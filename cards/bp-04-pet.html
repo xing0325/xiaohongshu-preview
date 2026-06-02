@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>04 · 桌宠 · bypass-pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bowlby+One+SC&family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E12; --paper:#171720; --tile:#1F1F2A;
+    --ink:#E8E2D5; --ink-soft:#A39C8E; --ink-faint:#6B6557;
+    --red:#C4413A; --red-deep:#7A1212;
+    --yellow:#F2C94C; --green:#7A8475; --green-bright:#A5B59E; --term:#5FB35A;
+    --line:rgba(232,226,213,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:'Noto Sans SC','Inter',sans-serif;color:var(--ink);
+    background:var(--bg);position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1.2px),
+      radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1.4px);
+    background-size:5px 5px,9px 9px;opacity:.5;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+  .topbar .num{color:var(--yellow);font-weight:700}
+
+  h1{
+    position:absolute;left:90px;top:140px;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:104px;line-height:1.04;color:var(--ink);letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--yellow)}
+  h1 small{
+    display:block;margin-top:18px;font-size:28px;color:var(--ink-faint);
+    font-weight:500;letter-spacing:.04em;
+    font-family:'JetBrains Mono',monospace;
+  }
+  h1 small::before{content:"// "}
+
+  /* the two pet states side by side */
+  .duo{
+    position:absolute;left:90px;right:90px;top:430px;
+    display:grid;grid-template-columns:1fr 1fr;gap:36px;
+  }
+  .state{
+    background:var(--paper);border:1px solid var(--line);
+    border-radius:18px;padding:38px 36px;
+    position:relative;overflow:hidden;
+  }
+  .state.accept{border-top:6px solid var(--green-bright)}
+  .state.bypass{border-top:6px solid var(--red)}
+  .state .head{
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:8px;
+  }
+  .state.accept .head b{color:var(--green-bright)}
+  .state.bypass .head b{color:var(--red)}
+
+  .ball-stage{
+    height:300px;display:flex;align-items:center;justify-content:center;
+    margin:18px 0;
+  }
+  .ball{
+    width:200px;height:200px;border-radius:50%;
+    box-shadow:
+      inset 0 -16px 32px rgba(0,0,0,0.4),
+      0 24px 48px -16px rgba(0,0,0,0.7);
+    display:flex;align-items:center;justify-content:center;
+    font-family:'Inter',sans-serif;font-weight:900;
+    color:var(--ink);font-size:32px;letter-spacing:.05em;
+  }
+  .ball.green{
+    background:radial-gradient(circle at 32% 30%, #A5B59E, var(--green) 50%, #4A5346 100%);
+    color:var(--ink);
+    border:3px solid #4A5346;
+  }
+  .ball.red{
+    background:radial-gradient(circle at 32% 30%, #d96b62, var(--red) 50%, var(--red-deep) 100%);
+    color:var(--yellow);
+    border:3px solid var(--yellow);
+  }
+  .ball span{transform:translateY(-2px)}
+
+  .sub-text{
+    text-align:center;font-family:'Noto Sans SC',sans-serif;
+    font-size:32px;font-weight:700;color:var(--ink);margin-top:8px;
+  }
+  .state.accept .sub-text{color:var(--green-bright)}
+  .state.bypass .sub-text{color:var(--red)}
+  .meta{
+    text-align:center;font-family:'JetBrains Mono',monospace;
+    font-size:18px;color:var(--ink-faint);margin-top:8px;letter-spacing:.1em;
+  }
+
+  /* interactions row */
+  .features{
+    position:absolute;left:90px;right:90px;top:1190px;
+    display:grid;grid-template-columns:1fr 1fr 1fr;gap:20px;
+  }
+  .feat{
+    background:var(--tile);border:1px solid var(--line);border-radius:10px;
+    padding:24px 22px;
+  }
+  .feat .icon{
+    font-family:'JetBrains Mono',monospace;font-size:24px;color:var(--yellow);
+    font-weight:700;margin-bottom:8px;letter-spacing:.04em;
+  }
+  .feat .name{
+    font-size:26px;font-weight:700;color:var(--ink);margin-bottom:6px;
+  }
+  .feat .desc{
+    font-size:20px;color:var(--ink-soft);line-height:1.45;
+  }
+
+  .footer{
+    position:absolute;bottom:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:20px;letter-spacing:.1em;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>BYPASS-PET · 桌宠</span>
+    <span><span class="num">04</span> / 09</span>
+  </div>
+
+  <h1>
+    一个 hook 不够，<br>
+    <span class="em">"我现在是什么模式"</span> 也要看见
+    <small>72px floating ball · always on top</small>
+  </h1>
+
+  <div class="duo">
+    <div class="state accept">
+      <div class="head">STATE · <b>ACCEPT</b></div>
+      <div class="ball-stage">
+        <div class="ball green"><span>ACCEPT</span></div>
+      </div>
+      <div class="sub-text">审批中</div>
+      <div class="meta">sentinel missing · Claude asks you</div>
+    </div>
+
+    <div class="state bypass">
+      <div class="head">STATE · <b>BYPASS</b></div>
+      <div class="ball-stage">
+        <div class="ball red"><span>BYPASS</span></div>
+      </div>
+      <div class="sub-text">裸奔中</div>
+      <div class="meta">sentinel present · Claude auto-approves</div>
+    </div>
+  </div>
+
+  <div class="features">
+    <div class="feat">
+      <div class="icon">[click]</div>
+      <div class="name">单击切换</div>
+      <div class="desc">点一次 = 翻面 + 0.6s 过场动画</div>
+    </div>
+    <div class="feat">
+      <div class="icon">[drag]</div>
+      <div class="name">拖动改位置</div>
+      <div class="desc">挪到顺眼的角落 · 退出记位置</div>
+    </div>
+    <div class="feat">
+      <div class="icon">[top]</div>
+      <div class="name">永远置顶</div>
+      <div class="desc">写代码 / 看视频时都看得见状态</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>04 · the visible switch</span>
+    <span>github.com/xing0325/bypass-pet</span>
+  </div>
+</body>
+</html>

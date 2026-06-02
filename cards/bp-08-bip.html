@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>08 · build in public · bypass-pet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=JetBrains+Mono:wght@400;700&family=Noto+Sans+SC:wght@400;700;900&family=Noto+Serif+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0E0E12; --paper:#171720; --tile:#1F1F2A;
+    --ink:#E8E2D5; --ink-soft:#A39C8E; --ink-faint:#6B6557;
+    --red:#C4413A; --yellow:#F2C94C; --term:#5FB35A;
+    --line:rgba(232,226,213,0.1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    width:1242px;height:1656px;overflow:hidden;
+    font-family:'Noto Sans SC','Inter',sans-serif;color:var(--ink);
+    background:var(--bg);position:relative;
+  }
+  body::before{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background-image:
+      radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1.2px),
+      radial-gradient(rgba(0,0,0,0.4) 1px, transparent 1.4px);
+    background-size:5px 5px,9px 9px;opacity:.5;
+  }
+
+  .topbar{
+    position:absolute;top:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-family:'JetBrains Mono',monospace;
+    font-size:22px;letter-spacing:.16em;color:var(--ink-faint);
+  }
+  .topbar .num{color:var(--yellow);font-weight:700}
+
+  h1{
+    position:absolute;left:90px;top:140px;
+    font-family:'Noto Sans SC',sans-serif;font-weight:900;
+    font-size:96px;line-height:1.04;color:var(--ink);letter-spacing:-.01em;
+  }
+  h1 .em{color:var(--yellow)}
+  h1 small{
+    display:block;margin-top:18px;font-size:28px;color:var(--ink-faint);
+    font-weight:500;letter-spacing:.04em;font-family:'JetBrains Mono',monospace;
+  }
+  h1 small::before{content:"// "}
+
+  /* git-log-style timeline */
+  .log{
+    position:absolute;left:90px;right:90px;top:430px;
+    font-family:'JetBrains Mono',monospace;
+  }
+  .entry{
+    display:grid;grid-template-columns:120px 1fr;gap:24px;
+    padding:18px 0;border-bottom:1px dashed var(--line);
+    align-items:flex-start;
+  }
+  .entry .date{
+    font-size:18px;color:var(--ink-faint);letter-spacing:.04em;line-height:1.6;
+  }
+  .entry .body{
+    font-size:24px;color:var(--ink);line-height:1.55;
+  }
+  .entry .body .sha{color:var(--term);font-weight:700;margin-right:10px}
+  .entry .body .ttl{font-family:'Noto Sans SC',sans-serif;font-size:26px;font-weight:700}
+  .entry .body .note{
+    display:block;margin-top:6px;font-size:20px;color:var(--ink-soft);font-family:'Noto Sans SC',sans-serif;
+    line-height:1.5;
+  }
+  .entry.pivot{background:linear-gradient(90deg, rgba(196,65,58,0.06), transparent 70%)}
+  .entry.pivot .ttl{color:var(--red)}
+  .entry.land .ttl{color:var(--term)}
+
+  .reflect{
+    position:absolute;left:90px;right:90px;bottom:200px;
+    padding:34px 40px;border-left:6px solid var(--yellow);border-radius:4px;
+    background:linear-gradient(180deg, rgba(242,201,76,0.1) 0%, rgba(242,201,76,0.02) 100%);
+    font-family:'Noto Sans SC',sans-serif;font-size:30px;line-height:1.55;
+    color:var(--ink);font-weight:500;letter-spacing:.01em;
+  }
+  .reflect .em{color:var(--yellow);font-weight:700}
+  .reflect small{
+    display:block;margin-top:14px;font-size:22px;color:var(--ink-soft);font-weight:400;
+    font-family:'Noto Serif SC',serif;font-style:italic;
+  }
+
+  .footer{
+    position:absolute;bottom:60px;left:90px;right:90px;
+    display:flex;justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;color:var(--ink-faint);
+    font-size:20px;letter-spacing:.1em;
+  }
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <span>BUILD IN PUBLIC · 时间线</span>
+    <span><span class="num">08</span> / 09</span>
+  </div>
+
+  <h1>
+    没有一开始就<br>
+    <span class="em">想做"产品"</span>
+    <small>git log --reverse</small>
+  </h1>
+
+  <div class="log">
+    <div class="entry">
+      <div class="date">05-16<br>晚上</div>
+      <div class="body">
+        <span class="sha">a1b2c3</span><span class="ttl">第一个 PowerShell hook</span>
+        <span class="note">单文件、写死路径、自己用 · 想着搞定就行</span>
+      </div>
+    </div>
+    <div class="entry">
+      <div class="date">05-17</div>
+      <div class="body">
+        <span class="sha">d4e5f6</span><span class="ttl">加了 bypass.cmd 双击切换</span>
+        <span class="note">桌面快捷方式 · 改善能用但还是丑</span>
+      </div>
+    </div>
+    <div class="entry pivot">
+      <div class="date">05-18<br>上午</div>
+      <div class="body">
+        <span class="sha">g7h8i9</span><span class="ttl">桌宠 v1 · 奶龙</span>
+        <span class="note">画得太满 · 没节奏 · 半天后自己淘汰了</span>
+      </div>
+    </div>
+    <div class="entry">
+      <div class="date">05-18<br>下午</div>
+      <div class="body">
+        <span class="sha">j0k1l2</span><span class="ttl">pivot · Fight Club 双态</span>
+        <span class="note">隐喻对得上：可怜礼貌的我 vs 自由失控的我</span>
+      </div>
+    </div>
+    <div class="entry">
+      <div class="date">05-19</div>
+      <div class="body">
+        <span class="sha">m3n4o5</span><span class="ttl">v3 升 144 帧 · 球缩到 72px</span>
+        <span class="note">原型版用占位球先跑通 · 真图慢慢补</span>
+      </div>
+    </div>
+    <div class="entry land">
+      <div class="date">05-20</div>
+      <div class="body">
+        <span class="sha">p6q7r8</span><span class="ttl">两个仓库整理完毕 · 可复用</span>
+        <span class="note">朋友拿链接就能装 · 不再只是我自己用</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reflect">
+    被一个按钮逼出来的副产物 · <span class="em">最后变成两个公开仓库。</span>
+    <small>vibe coding 不一定每次都成事 · 这个成了。</small>
+  </div>
+
+  <div class="footer">
+    <span>08 · the trail</span>
+    <span>高三休学 · 自媒体起步 · 第 N 篇</span>
+  </div>
+</body>
+</html>
