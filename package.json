@@ -1,0 +1,25 @@
+{
+  "name": "xiaohongshu-preview",
+  "version": "0.2.0",
+  "private": true,
+  "type": "module",
+  "description": "HTML cards → Xiaohongshu preview → PNG publish pack → optional opencli draft/publish.",
+  "scripts": {
+    "serve": "python -m http.server 8060",
+    "export": "node scripts/export-publish-pack.mjs",
+    "xhs:login": "opencli xiaohongshu creator-profile --window foreground --site-session persistent",
+    "xhs:draft": "node scripts/xhs-publish.mjs --draft",
+    "xhs:publish": "node scripts/xhs-publish.mjs --publish",
+    "xhs:dry-run": "node scripts/xhs-publish.mjs --draft --dry-run"
+  },
+  "keywords": [
+    "xiaohongshu",
+    "rednote",
+    "html-cards",
+    "publish-pack",
+    "opencli"
+  ],
+  "engines": {
+    "node": ">=18"
+  }
+}

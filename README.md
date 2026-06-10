@@ -49,7 +49,7 @@
 2. **你本地预览**——打开 `index.html`，按小红书 App / 网页版的真实样子看效果
 3. **一键导出 PNG**——单张或全部，1242×1656 高清，直接发笔记
 
-整套**没有 npm，没有 build，没有数据库**。HTML 文件双击就跑。
+预览工作台本身**没有 build，没有数据库**。HTML 文件很轻；如果要用命令行导出 PNG 或推送到小红书草稿，再使用可选的 Node / opencli 流程。
 
 ---
 
@@ -103,11 +103,91 @@ python -m http.server 8060
 # 浏览器开 http://localhost:8060
 ```
 
-仓库自带一组**完整示例**（10 张关于一个 520 求和好项目的卡片 + 一篇完整文案），打开就能看效果。然后你换成你自己的：
+仓库自带一组**完整示例**（9 张关于一个 520 求和好项目的卡片 + 一篇完整文案），打开就能看效果。然后你换成你自己的：
 
 1. 把 AI 给你的 HTML 卡片放进 `cards/`
 2. 把 AI 给的配置替换 `cards.config.js`
 3. 刷新 → 预览 → 下载 → 发
+
+---
+
+## 命令行导出 + 小红书草稿 / 发布（可选）
+
+浏览器按钮适合人工验收；如果你想把最后一步交给 agent / CLI，可以用可选的 Node + opencli 流程。
+
+### 1. 导出发布包
+
+```bash
+npm run export
+```
+
+会按 `cards.config.js` 里的顺序生成：
+
+```text
+dist/xhs-pack/
+├── images/              # 01-...png，按小红书上传顺序排列
+├── title.txt
+├── body.txt
+├── topics.txt
+├── caption-full.txt
+└── publish.json         # opencli 发布用的数据源
+```
+
+导出脚本使用本机 Chrome / Edge 的 headless screenshot，不需要额外 npm 依赖。如果浏览器没被自动找到，可以指定：
+
+```bash
+CHROME_PATH="/path/to/chrome" npm run export
+```
+
+### 2. 登录小红书创作者中心
+
+第一次用 opencli 前，先让它打开真实浏览器并复用登录态：
+
+```bash
+npm run xhs:login
+```
+
+如果弹出登录页，用手机扫码登录小红书创作者中心。
+
+### 3. 整理到小红书草稿（推荐）
+
+```bash
+npm run xhs:draft
+```
+
+这会调用：
+
+```bash
+opencli xiaohongshu publish ... --draft
+```
+
+也就是：上传图片、填写标题正文、挂话题，但先保存为草稿。发布前你还能检查封面、顺序、错别字和平台敏感点。
+
+### 4. 直接发布（谨慎）
+
+如果你已经确认内容，可以选择：
+
+```bash
+npm run xhs:publish
+```
+
+它会尝试直接点击发布。建议先跑一遍 dry-run 看命令：
+
+```bash
+npm run xhs:dry-run
+```
+
+> 风险提示：小红书没有面向个人创作者的稳定公开发布 API。这类方案和网上的自动发布 Skill 一样，本质是用真实 Chrome / CDP / Playwright 自动化创作者中心，可能遇到登录、验证码、页面改版、风控、限流等问题。默认走草稿，是为了保留最后的人类确认。
+
+---
+
+## 和 Auto-Redbook-Skills 这类项目的关系
+
+网上流行的 `Auto-Redbook-Skills` / 小红书自动发布 Skill 更像一整条运营流水线：选题、自动撰写、自动生图、渲染卡片、自动发布，适合批量化和矩阵化。
+
+这个 repo 更克制：它只管把**一个具体项目**变成一篇你能预览、能改、能确认的小红书图文。现在加上的发布包和 opencli 草稿流程，是把最后的复制、下载、上传接住，但不把内容判断完全交出去。
+
+如果你想批量运营，可以参考那些 Skill；如果你想认真讲清楚自己做的一个项目，这个工作台更轻、更透明，也更适合 build in public。
 
 ---
 
@@ -147,7 +227,7 @@ iPhone 边框、状态栏、动态轮播、互动栏、作者头像、关注按�
 
 - **不是图片编辑器**——你不能在工作台里画图，所有图必须是 HTML 写的
 - **不是小红书爬虫 / 数据分析工具**——这个 repo 不接小红书 API，不爬数据
-- **不是发布自动化**——你最后还是要手动把图片传到小红书 App
+- **不是默认全自动发布工具**——默认建议整理到小红书草稿，最终发布前由你确认；如果你明确选择，也可以走 opencli 直接发布
 - **不是 GUI 拖拽工具**——视觉调整要改 HTML / CSS（这也是它的优势：可编程、可让 AI 接管）
 
 ---
@@ -156,12 +236,14 @@ iPhone 边框、状态栏、动态轮播、互动栏、作者头像、关注按�
 
 ```
 xiaohongshu-preview/
-├── index.html          ← 工作台主页（双击就跑）
+├── index.html          ← 工作台主页（建议通过本地 server 打开）
 ├── cards.config.js     ← AI agent 主要要更新的就是这个
 ├── cards/              ← AI agent 把生成的 HTML 配图丢这里
 │   ├── 01-cover.html
 │   ├── 02-...
 │   └── 09-payoff.html
+├── scripts/            ← 可选：命令行导出发布包 / 调 opencli 发草稿
+├── package.json        ← 可选 npm scripts
 └── README.md           ← 你正在读的
 ```
 
