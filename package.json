@@ -6,6 +6,8 @@
   "description": "HTML cards → Xiaohongshu preview → PNG publish pack → optional opencli draft/publish.",
   "scripts": {
     "serve": "python -m http.server 8060",
+    "preexport": "node scripts/update-lixon-card.mjs --quiet",
+    "update:lixon-card": "node scripts/update-lixon-card.mjs",
     "export": "node scripts/export-publish-pack.mjs",
     "xhs:doctor": "opencli doctor && opencli profile list",
     "xhs:login": "opencli xiaohongshu creator-profile --window foreground --site-session persistent",

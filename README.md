@@ -217,6 +217,14 @@ dist/xhs-pack/
 
 最后一页可以包含头像、名字、三枚标签、账号介绍、往期精彩和一句“下期见”。这个签名不要写成硬广，也不要每篇都大段自我介绍。它的作用是让读者下次刷到时能想起：哦，原来还是这个人在做这些项目。
 
+`cards/99-lixon.html` 里的“往期精彩”不是长期写死的。运行 `npm run export` 时会先执行：
+
+```bash
+npm run update:lixon-card
+```
+
+这个脚本会优先从小红书创作者中心的笔记管理页抓最近笔记标题、数据和封面图，并写入 `assets/profile/recent-notes.json` / `assets/profile/recent-*.jpg` / `cards/99-lixon.html`。如果 opencli 登录失效或页面结构变化，脚本会使用上一次缓存，不阻断图片导出。
+
 ### 5. 草稿或直接发布
 
 默认安全模式：
@@ -337,6 +345,7 @@ xiaohongshu-preview/
 │   └── 99-lixon.html              # 可选：账号记忆点 / 下期见卡
 ├── scripts/
 │   ├── export-publish-pack.mjs   # 导出 PNG + publish.json
+│   ├── update-lixon-card.mjs     # 刷新 Lixon 下期见卡 / 往期精彩
 │   └── xhs-publish.mjs           # 调 opencli 发草稿 / 发布
 ├── assets/readme/                # README 截图
 ├── assets/profile/               # 头像 / 账号名片素材
