@@ -2,14 +2,14 @@
 
 # xiaohongshu-preview
 
-把一个项目，推进到一条能发的小红书草稿。
+让 AI 用 HTML/CSS 写小红书图文卡片，然后导出、整理到草稿，或者直接发布。
 
-给 AI agent 项目背景，它按仓库结构生成 HTML 卡片和文案。你在本地看到接近小红书 App 的效果，导出 1242×1656 图片，再用 opencli 整理到创作者中心草稿箱。
+不是让生图模型画几张不可控的海报。这个仓库给 coding agent 一个固定交付格式：它读你的项目 session，提炼你为什么做、怎么解决问题、学到了什么，再用 HTML/CSS 生成可编辑、可版本管理、文字稳定的 3:4 图文卡片。
 
-[![Xiaohongshu](https://img.shields.io/badge/Xiaohongshu-publish_pack-FF2442?style=flat-square)]()
-[![Agent ready](https://img.shields.io/badge/agent-ready-111827?style=flat-square)]()
 [![HTML cards](https://img.shields.io/badge/cards-HTML%2FCSS-2563EB?style=flat-square)]()
-[![OpenCLI](https://img.shields.io/badge/opencli-draft_publish-16A34A?style=flat-square)]()
+[![Agent ready](https://img.shields.io/badge/coding_agent-ready-111827?style=flat-square)]()
+[![Build in public](https://img.shields.io/badge/build_in_public-made_for_vibe_coders-7C3AED?style=flat-square)]()
+[![OpenCLI](https://img.shields.io/badge/opencli-draft_or_publish-16A34A?style=flat-square)]()
 
 <img src="assets/readme/workbench.png" alt="xiaohongshu-preview workbench" width="900" />
 
@@ -17,88 +17,157 @@
 
 ---
 
-## 为什么需要这个
+## 这个仓库真正卖的是什么
 
-很多项目不是没人想看，是发布前卡住了。
+很多 AI 工具都能“生成一张图”。问题是，项目型小红书笔记通常不适合交给生图模型。
 
-做完一个 side project、工具、课程笔记、活动记录之后，真正麻烦的是这些事：
+你要的是：
 
-- 文案和图片分开生成，最后拼不到一篇完整笔记里。
-- AI 做的图单张看还行，放进小红书轮播节奏不一定对。
-- 你不知道第一张封面、正文、互动栏在手机里到底长什么样。
-- 导出图片、复制标题正文、整理 hashtag、上传排序，全是重复劳动。
-- 直接让自动化工具发布又有点危险，最好先到草稿箱，人看一眼。
+- 封面字要准，不能多字、错字、变形。
+- 一组图要有统一排版，而不是九张风格漂移的图片。
+- 文案和图片要来自同一个项目故事，不能像两套东西拼在一起。
+- 改一个标题、数字、配色、顺序，应该像改代码一样可控。
+- 最后要能导出、上传、填标题正文，而不是停在“看起来不错”。
 
-这个仓库解决的是最后这段路：
+所以这个仓库的核心是：
 
 ```text
-项目背景
+项目 session 里的真实上下文
   ↓
-AI agent 生成 cards/ + cards.config.js
+AI agent 提炼：初心 / 问题 / 解决过程 / 学到的东西 / 给读者的价值
   ↓
-本地预览小红书 App / 网页版效果
+HTML/CSS 卡片，而不是生图模型图片
   ↓
-npm run export 生成发布包
+小红书图文发布包
   ↓
-npm run xhs:draft 整理到小红书草稿
-  ↓
-你确认后发布
+草稿箱或直接发布
 ```
 
-它不是“再做一个图片模板工具”。它更像一个给 agent 用的发布前工作台。
+自动发布是很大的卖点，但它不是唯一卖点。更大的卖点是：**从项目上下文到可发布图文，中间不再断。**
+
+---
+
+## 为什么是 HTML，而不是 AI 生图
+
+生图模型适合做氛围图，不适合做信息密度高的小红书项目卡片。
+
+| 需求 | 生图模型 | HTML/CSS 卡片 |
+| --- | --- | --- |
+| 中文长标题 | 容易错字、变形 | 文字就是文字 |
+| 多张图统一风格 | 容易漂 | CSS 变量统一控制 |
+| 改一个数字 / 句子 | 基本要重抽 | 改一行 HTML |
+| 版本管理 | 很难看 diff | Git 直接看改了什么 |
+| 让 coding agent 接管 | 不稳定 | 天然适合 agent 写文件 |
+| 小红书 3:4 排版 | 靠提示词赌 | 固定 1242×1656 |
+
+这就是 vibe coder 会喜欢的地方：你已经在项目 session 里和 agent 一起做东西了，现在只要把这个仓库丢给它，它就能继续把这段经历整理成一组小红书图文。
+
+不是“请 AI 帮我营销一下”。
+
+更像是：
+
+```text
+你刚刚和我一起做完这个项目。
+现在请把我们为什么做、怎么做、踩了什么坑、学到了什么，
+整理成一篇适合发小红书的 build in public 图文。
+按 xiaohongshu-preview 的结构交付。
+```
 
 ---
 
 ## 适合谁
 
-适合这些场景：
+这个仓库最适合这类人：
 
-- 独立开发者、学生、创作者：做了东西，但不想再打开 Figma 从零排版。
-- 经常用 Claude / GPT 写代码的人：希望 AI 产出的内容能直接落到文件和草稿里。
-- 小红书图文作者：想保持系列感，但又不想每次手动调九张图。
-- 产品经理、运营、小团队：需要把功能更新、案例、教程快速变成一篇可检查的笔记。
-- build in public：希望把“我做了什么”讲成“别人为什么会在意”。
+- vibe coder：项目是和 AI 一起做的，发布内容也想让 AI 接上。
+- 独立开发者 / 学生：做了 side project，但不知道怎么把它讲给普通人听。
+- build in public 创作者：想发的不只是结果，还有过程、取舍、踩坑和学习。
+- 用 Claude Code / Codex / Hermes / Cursor 的人：希望 agent 能直接改文件、导出图、发草稿。
+- 做工具、网站、自动化脚本、小实验的人：需要把“功能说明”变成“别人愿意点开看的故事”。
 
-不适合这些需求：
+不太适合：
 
-- 不适合做爬虫、数据采集、批量养号。
-- 不适合绕过验证码、风控或平台审核。
-- 不适合纯拖拽修图。这里的图是 HTML/CSS，适合让 AI 和版本管理接管。
+- 只想做氛围大片、写真、摄影风格图。
+- 想批量养号、爬数据、规避平台风控。
+- 完全不想碰 HTML/CSS，也不想让 agent 修改代码文件。
 
 ---
 
-## 它能做什么
+## 一个典型用法
 
-### 1. 让 agent 按固定结构交付
+你在某个项目 session 里，刚和 agent 做完一个工具。你发一句：
 
-Agent 不再只给你一段散文和几张不知怎么落地的图。它要产出：
+```text
+请用这个仓库把当前项目整理成一篇小红书图文：
+https://github.com/xing0325/xiaohongshu-preview
+
+重点讲：
+1. 我为什么做它
+2. 它解决了谁的什么问题
+3. 做的过程中最关键的坑和解法
+4. 我学到了什么
+5. 读者可以怎么用 / 怎么复刻
+
+按仓库结构生成 cards/ 和 cards.config.js。
+默认导出发布包并整理到小红书草稿。
+```
+
+Agent 应该做的不是空泛夸项目，而是从当前 session 里提取真实素材：
+
+- 你反复纠结过的点
+- 最后跑通的关键步骤
+- 你对这个项目的热情
+- 对读者真的有用的复刻路径
+- 哪些话适合放封面，哪些话适合放正文
+
+然后它交付：
 
 ```text
 cards/
   01-cover.html
-  02-....html
+  02-problem.html
+  03-solution.html
   ...
 cards.config.js
 ```
 
-`cards.config.js` 是整篇笔记的数据源：图片顺序、标题、正文、hashtag、作者信息都放在这里。
+再继续跑：
 
-### 2. 在发布前看见真实阅读效果
+```bash
+npm run export
+npm run xhs:draft
+```
 
-工作台提供两种预览：
+如果你明确说“直接发布”，才跑：
 
-- 手机视图：模拟小红书 App 的轮播、作者区、互动栏。
-- 网页视图：检查电脑端的图片和正文排布。
+```bash
+npm run xhs:publish
+```
 
-你可以在本地改文案、切换深浅色、翻页、导出单张或全部图片。
+---
 
-### 3. 导出发布包
+## 它提供的四个环节
+
+### 1. 固定的 agent 交付格式
+
+`cards.config.js` 是整篇笔记的数据源：
+
+- 图片顺序
+- 标题
+- 正文
+- hashtag
+- 作者名 / 地点
+- 预览用互动数据
+
+`cards/` 里每张图都是一个独立 HTML 文件。Agent 写出来，你能直接看 diff、改 CSS、改标题、换顺序。
+
+### 2. HTML 生成图片
 
 ```bash
 npm run export
 ```
 
-输出：
+生成：
 
 ```text
 dist/xhs-pack/
@@ -110,27 +179,41 @@ dist/xhs-pack/
 └── publish.json
 ```
 
-图片尺寸是小红书常用的 1242×1656，最多 9 张。
+导出的图片是 1242×1656，适合小红书 3:4 图文。脚本会检查图片数量，超过 9 张会停下来。
 
-### 4. 自动整理到小红书草稿
+### 3. 发布前质检
+
+预览不是这个项目的主角，但它很有用。
+
+它负责在发布前帮你检查：
+
+- 第一张封面在手机里有没有钩子。
+- 九张图的顺序有没有断。
+- 正文和图片是不是同一个故事。
+- 深色/浅色下有没有看不清。
+- 网页端布局是否太挤。
+
+也就是说，预览不是“炫酷功能”，而是避免你把一组半成品发出去的质检台。
+
+### 4. 草稿或直接发布
+
+默认安全模式：
 
 ```bash
 npm run xhs:draft
 ```
 
-它会通过 opencli 打开小红书创作者中心，上传图片、填写标题正文、选择话题，然后保存为草稿。
-
-如果你明确确认，也可以直接发布：
+确认后直接发布：
 
 ```bash
 npm run xhs:publish
 ```
 
-默认建议先草稿。小红书页面会改，账号也可能遇到风控。草稿模式把重复劳动交给自动化，把最后判断留给人。
+这一步通过 opencli 操作小红书创作者中心，上传图片、填写标题正文、选择话题。草稿是保底，直接发布是加速档。
 
 ---
 
-## 30 秒体验预览
+## 快速开始
 
 ```bash
 git clone https://github.com/xing0325/xiaohongshu-preview.git
@@ -144,60 +227,38 @@ python -m http.server 8060
 http://localhost:8060
 ```
 
-仓库自带一组示例卡片。你可以先看工作台效果，再把 `cards/` 和 `cards.config.js` 换成自己的内容。
+仓库自带一组示例卡片。先看结构，再换成自己的项目内容。
 
 ---
 
-## 一条完整发布流程
+## 给 agent 的完整 prompt
 
-### 第一步：让 agent 生成图文
-
-把这段 prompt 给 Claude、GPT、Hermes 或其他能操作文件的 agent：
+你可以把这段直接丢给 Claude Code、Codex、Hermes、Cursor 或其他能操作文件的 agent：
 
 ````markdown
 我有一个小红书图文工作台仓库：
 https://github.com/xing0325/xiaohongshu-preview
 
-请按这个仓库的结构，帮我做一组完整的小红书图文：
+请基于当前项目 session，帮我生成一篇适合 build in public 的小红书图文。
 
-1. 生成 6-9 张 HTML 卡片，放到 cards/，尺寸 1242×1656，全部 inline CSS。
-2. 更新 cards.config.js，配置卡片顺序、标题、正文、hashtag、作者信息。
-3. 内容重点不是“我多努力”，而是读者为什么会在意、能获得什么、为什么现在该看。
-4. 封面要有明确钩子，内页要有节奏，最后一页给行动入口。
-5. 视觉风格根据项目气质来，不要套通用营销模板。
+核心要求：
+1. 不要用生图模型思路。请用 HTML/CSS 写 6-9 张 1242×1656 卡片，放到 cards/。
+2. 更新 cards.config.js，配置图片顺序、标题、正文、hashtag、作者信息。
+3. 内容重点不是“我多努力”，而是：
+   - 我为什么做这个项目
+   - 它解决了谁的什么问题
+   - 做的过程中最关键的坑和解法
+   - 我学到了什么
+   - 读者能怎么用 / 怎么复刻
+4. 封面要有真实钩子，不要标题党。
+5. 视觉风格跟项目气质一致，不要套通用营销模板。
+6. 最后一页给明确行动入口：看仓库、试用、评论区自取、复刻步骤等。
 
-# 项目背景
-[粘贴项目起因、解决的问题、目标用户、最有意思的细节、你希望读者做什么]
-
-# 发布动作
+发布动作：
 - 默认运行 npm run export，然后 npm run xhs:draft 整理到小红书草稿。
 - 只有我明确说“直接发布”时，才运行 npm run xhs:publish。
 - 如果 opencli 未登录、标题超过 20 字、图片超过 9 张，先停下来说明问题。
 ````
-
-### 第二步：导出发布包
-
-```bash
-npm run export
-```
-
-### 第三步：整理到草稿
-
-```bash
-npm run xhs:draft
-```
-
-### 可选：直接发布
-
-```bash
-npm run xhs:publish
-```
-
-建议先用 dry-run 看一下最终命令：
-
-```bash
-npm run xhs:dry-run
-```
 
 ---
 
@@ -205,7 +266,7 @@ npm run xhs:dry-run
 
 小红书发布这一步依赖 opencli 和 Chrome / Chromium Browser Bridge。
 
-### 检查 opencli
+检查状态：
 
 ```bash
 npm run xhs:doctor
@@ -220,13 +281,13 @@ Connectivity: connected
 
 说明浏览器桥已经通了。
 
-### 登录创作者中心
+登录创作者中心：
 
 ```bash
 npm run xhs:login
 ```
 
-第一次会打开小红书创作者中心。你扫码登录一次即可。之后 `--site-session persistent` 会尽量复用登录态。
+第一次会打开小红书创作者中心。扫码登录一次即可。之后 `--site-session persistent` 会尽量复用登录态。
 
 注意：opencli 走 Chrome / Chromium，不会自动复用 Zen 浏览器里的登录态。你需要在 opencli 能控制的 Chrome 或 Edge profile 里登录一次。
 
@@ -244,7 +305,7 @@ npm run xhs:login
 
 ```text
 xiaohongshu-preview/
-├── index.html                    # 预览工作台
+├── index.html                    # 发布前质检工作台
 ├── cards.config.js               # 笔记数据源：顺序、标题、正文、话题
 ├── cards/                        # HTML 卡片
 │   ├── 01-cover.html
@@ -264,8 +325,8 @@ xiaohongshu-preview/
 window.CARDS_CONFIG = {
   cards: [
     'cards/01-cover.html',
-    'cards/02-origin.html',
-    'cards/03-workflow.html',
+    'cards/02-problem.html',
+    'cards/03-solution.html',
   ],
   post: {
     author_name: '你的名字',
@@ -282,67 +343,24 @@ window.CARDS_CONFIG = {
 
 ---
 
-## 和 Figma、Canva、自动发布工具的区别
+## 和其他工具的区别
 
-| 工具 | 更适合 | 问题 |
+| 工具 | 适合 | 不适合 |
 | --- | --- | --- |
-| Figma / Sketch | 精修设计稿 | AI 很难直接接管；一套九图改起来慢 |
-| Canva / 醒图 | 套模板出图 | 系列感容易像模板；批量修改不舒服 |
-| 普通 AI 生图 | 做氛围图 | 字体、排版、长文、版本迭代都不稳定 |
-| 全自动发布脚本 | 批量运营 | 容易跳过人工判断，也更容易踩平台风控 |
-| xiaohongshu-preview | 项目叙事、图文工作流、草稿发布 | 需要接受 HTML/CSS 卡片这种可编程方式 |
+| 生图模型 | 氛围图、插画、摄影感 | 中文长文、稳定排版、反复修改 |
+| Figma / Canva | 人工精修 | agent 自动生成和批量迭代 |
+| 普通自动发布脚本 | 把现成素材发出去 | 帮你把项目故事变成素材 |
+| xiaohongshu-preview | 从项目 session 生成 HTML 图文，并发到草稿/发布 | 完全无人工判断的批量营销 |
 
-这个仓库不追求把人彻底拿掉。它把重复劳动拿掉：排版、预览、导出、上传、填表。最后是否发布，仍然应该由你决定。
+它的重点不是“我能替你发一条小红书”。
 
----
-
-## 设计原则
-
-- 先展示结果，再解释怎么做。
-- 一篇笔记只有一个核心承诺，不把所有功能都塞进封面。
-- 每张图都是 HTML 文件，能被 AI 修改，能进 Git diff。
-- 文案和图片顺序来自同一个配置文件，避免手动复制时出错。
-- 默认保存草稿，不默认直接发布。
-
----
-
-## 常见问题
-
-### 双击 index.html 为什么预览不完整？
-
-浏览器的 `file://` 安全限制会影响 iframe。用本地 server：
-
-```bash
-python -m http.server 8060
-```
-
-然后访问 `http://localhost:8060`。
-
-### 标题为什么限制 20 字？
-
-opencli 的小红书发布命令按创作者中心规则限制标题最多 20 字。脚本会在发布前检查，超了就停下来。
-
-### 图片可以超过 9 张吗？
-
-不建议。小红书图文最多 9 张，导出脚本也会检查这个限制。
-
-### opencli 会保存我的账号密码吗？
-
-不会。它复用浏览器登录态。账号登录、验证码、风控验证都应该由你自己在浏览器里完成。
-
-### 能不能让 agent 直接发布？
-
-可以，命令是 `npm run xhs:publish`。但默认建议 `npm run xhs:draft`。草稿模式更适合真实创作：自动化负责填好，人负责最后判断。
-
-### 这个和 Auto-Redbook-Skills 一样吗？
-
-不一样。那类 Skill 更像批量内容流水线：选题、撰写、生图、发布。这个仓库更窄：它服务于“我已经有一个项目/故事，要把它变成一篇可检查、可发布的小红书图文”。
+重点是：**你的项目已经在 agent session 里发生过了，这个仓库让 agent 把那段过程变成一组能发出去的图文。**
 
 ---
 
 ## Roadmap
 
-- [x] 小红书 App / 网页双视图预览
+- [x] 小红书 App / 网页双视图质检
 - [x] HTML 卡片轮播
 - [x] 文案编辑和本地保存
 - [x] 单张 / 全部 PNG 下载
@@ -351,10 +369,12 @@ opencli 的小红书发布命令按创作者中心规则限制标题最多 20 �
 - [ ] 多 deck 管理：一个仓库维护多篇待发笔记
 - [ ] 自动按 cards/ 文件名生成卡片列表
 - [ ] 发布前检查清单：标题、封面、敏感词、话题、链接
-- [ ] 视频笔记预览
+- [ ] 更强的 agent prompt 模板：自动从项目 README / commit / session 总结里提炼故事线
 
 ---
 
 ## License
 
-随便用。觉得有用的话，给个 star。真正欢迎的是 issue 和 PR：如果你也在把项目发到小红书，这个工作流还有很多地方可以继续磨。
+随便用。觉得有用的话，给个 star。
+
+如果你也在用 AI 做项目、写项目、发项目，欢迎提 issue 或 PR。这个仓库最值得继续磨的地方，就是让“项目做完之后怎么讲出去”变得越来越顺。
