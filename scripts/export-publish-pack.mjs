@@ -53,9 +53,6 @@ function readConfig() {
   if (!cfg || !Array.isArray(cfg.cards) || cfg.cards.length === 0) {
     throw new Error('cards.config.js must define window.CARDS_CONFIG.cards');
   }
-  if (cfg.cards.length > 9) {
-    throw new Error(`Xiaohongshu supports at most 9 images; config has ${cfg.cards.length}`);
-  }
   return cfg;
 }
 
@@ -169,7 +166,11 @@ async function main() {
 
   const topics = normalizeTopics(post);
   const title = String(post.title || '').trim();
-  const body = String(post.body || '').trim();
+  const rawBody = String(post.body || '').trim();
+  const accountNote = String(post.account_note || post.accountNote || '').trim();
+  const body = accountNote && !rawBody.includes(accountNote)
+    ? [rawBody, '—', accountNote].filter(Boolean).join('\n\n')
+    : rawBody;
   const captionFull = [
     title,
     '',
@@ -184,6 +185,7 @@ async function main() {
     topics,
     images,
     author_name: post.author_name || '',
+    account_note: accountNote,
     exported_at: new Date().toISOString(),
     source_config: 'cards.config.js',
   };

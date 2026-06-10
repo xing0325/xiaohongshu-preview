@@ -64,7 +64,6 @@ function readPack(packDir) {
     if (!fs.existsSync(image)) throw new Error(`Image missing: ${image}`);
   }
   if (!images.length) throw new Error('publish.json has no images');
-  if (images.length > 9) throw new Error(`Xiaohongshu supports max 9 images; got ${images.length}`);
   return { ...pack, images };
 }
 
@@ -96,6 +95,9 @@ function main() {
   console.log(`[xhs] mode=${args.mode}`);
   console.log(`[xhs] title=${title}`);
   console.log(`[xhs] images=${pack.images.length}`);
+  if (pack.images.length > 9) {
+    console.warn('[xhs:warn] This pack has more than 9 images. The local workflow no longer blocks it, but Xiaohongshu/opencli may still enforce a platform-side limit. If upload fails, split the deck or retry manually.');
+  }
   if (topics) console.log(`[xhs] topics=${topics}`);
 
   const pretty = [args.opencli, ...opencliArgs].map(shellQuote).join(' ');

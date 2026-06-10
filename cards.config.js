@@ -68,6 +68,10 @@ window.CARDS_CONFIG = {
       '异地恋', 'vibecoding', '独立开发', '真诚才是必杀技'
     ],
 
+    // Optional: appended to exported body.txt / caption-full.txt as a light account signature.
+    // Also use the same memory point on the final CTA card so readers remember the creator.
+    account_note: '18 岁休学 vibe coder，一边做项目一边记录 AI 工作流。关注我，看普通人怎么把 AI 工具真的用进项目里。',
+
     // Numbers shown in the action bar (likes / comments / collects).
     // Fake-but-realistic for preview purposes.
     stats: { likes: '12.3k', comments: '234', collects: '78' },
