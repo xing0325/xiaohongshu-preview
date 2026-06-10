@@ -159,6 +159,8 @@ npm run xhs:login
 如果弹出登录页，用手机扫码登录小红书创作者中心。
 
 > 说明：opencli 当前走的是 Chrome / Chromium Browser Bridge，不会自动复用你 Zen 浏览器里的登录态。你只需要在 opencli 能控制的 Chrome / Edge profile 里登录一次；之后 `--site-session persistent` 会尽量复用这个登录态。可以用 `npm run xhs:doctor` 检查 Browser Bridge 是否已连接。
+>
+> 如果 `doctor` 已经显示 Extension connected，但 `xhs:login` 仍然 401，先运行 `opencli profile list` 找到已连接的 profile id，然后执行 `opencli profile use <profile-id>` 设为默认，再重试 `npm run xhs:login`。
 
 ### 2.5 给 agent 的执行方式
 
