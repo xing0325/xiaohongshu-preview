@@ -19,12 +19,13 @@ window.CARDS_CONFIG = {
     'cards/07-disappointment.html', // 7. 失望档案
     'cards/10-howto.html',        // 8. 三步上手
     'cards/01-cover.html',        // 9. 故事落点 (她 8:26 / 5 分 31 秒)
+    'cards/99-lixon.html',        // 10. 账号记忆点 / 下期见
   ],
 
   // The post itself (caption / hashtags / author).
   post: {
-    author_name: 'museum-of-us',
-    author_bio: '熬过冷战，做了个网站',
+    author_name: '数字病人Lixon',
+    author_bio: '走创新教育路径的休学 vibe coder',
     location: '成都',
     title: '冷战 81 天，我用两天给她做了一个网站',
     body: `跟女朋友冷战两个多月了。
@@ -70,7 +71,7 @@ window.CARDS_CONFIG = {
 
     // Optional: appended to exported body.txt / caption-full.txt as a light account signature.
     // Also use the same memory point on the final CTA card so readers remember the creator.
-    account_note: '18 岁休学 vibe coder，一边做项目一边记录 AI 工作流。关注我，看普通人怎么把 AI 工具真的用进项目里。',
+    account_note: '我是 Lixon，一个走创新教育路径的休学 vibe coder。这个账号记录 vibe coding 项目、灵感迸发和普通人如何用 AI 做东西。关注我，看一个 18 岁休学的人怎么折腾产品、自媒体和自己的工作流。',
 
     // Numbers shown in the action bar (likes / comments / collects).
     // Fake-but-realistic for preview purposes.
