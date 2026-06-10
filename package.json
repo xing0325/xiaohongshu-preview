@@ -7,6 +7,7 @@
   "scripts": {
     "serve": "python -m http.server 8060",
     "export": "node scripts/export-publish-pack.mjs",
+    "xhs:doctor": "opencli doctor && opencli profile list",
     "xhs:login": "opencli xiaohongshu creator-profile --window foreground --site-session persistent",
     "xhs:draft": "node scripts/xhs-publish.mjs --draft",
     "xhs:publish": "node scripts/xhs-publish.mjs --publish",
