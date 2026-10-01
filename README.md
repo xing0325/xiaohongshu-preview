@@ -2,8 +2,7 @@
 
 # xiaohongshu-preview · 小红书图文预览工作台
 
-**在线预览：** <https://xing0325.github.io/xiaohongshu-preview/>  
-**定位：** 把 AI Agent 产出的 HTML 卡片变成可检查、可导出、可发布的小红书图文包。
+**定位：** 把 AI Agent 产出的 HTML 卡片变成可检查、可导出、可发布的小红书图文包。按照下方快速开始说明在本地打开工作台即可使用。
 
 让 AI 用 HTML/CSS 写小红书图文卡片，然后导出、整理到草稿，或者直接发布。
 
